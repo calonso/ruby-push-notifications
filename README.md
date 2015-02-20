@@ -1,4 +1,4 @@
-# Ruby::Push::Notifications
+# Ruby::Push::Notifications [![Build Status](https://travis-ci.org/calonso/ruby-push-notifications.svg)](https://travis-ci.org/calonso/ruby-push-notifications)
 
 TODO: Write a gem description
 
