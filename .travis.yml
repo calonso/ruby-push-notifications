@@ -7,4 +7,3 @@ rvm:
   - jruby-19mode # JRuby in 1.9 mode
   - jruby-20mode
   - jruby-21mode
-  - jruby-22mode
