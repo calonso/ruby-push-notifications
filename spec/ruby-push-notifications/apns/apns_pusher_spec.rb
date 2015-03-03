@@ -22,7 +22,7 @@ module RubyPushNotifications
             before { allow(IO).to receive(:select).and_return [[]] }
 
             it 'writes the notification to the socket' do
-              expect(socket).to receive(:write).with(notification.to_apns_binary(0))
+              expect(socket).to receive(:write).with(notification.to_apns_binary(NO_ERROR_STATUS_CODE))
               pusher.push [notification]
             end
 
@@ -40,11 +40,11 @@ module RubyPushNotifications
 
             before do
               allow(IO).to receive(:select).and_return [[socket]]
-              allow(socket).to receive(:read).with(6).and_return [8, 1, 0].pack 'ccN'
+              allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
             end
 
             it 'returns the error' do
-              expect(pusher.push [notification]).to eq [1]
+              expect(pusher.push [notification]).to eq [PROCESSING_ERROR_STATUS_CODE]
             end
           end
         end

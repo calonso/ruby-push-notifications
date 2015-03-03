@@ -24,7 +24,7 @@ module RubyPushNotifications
               err = rs[0].read 6
               results << err.unpack('ccN')[1]
             else
-              results << 0
+              results << NO_ERROR_STATUS_CODE
             end
           end
         end
