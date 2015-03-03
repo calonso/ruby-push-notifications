@@ -72,6 +72,86 @@ module RubyPushNotifications
               expect(pusher.push notifications).to eq notifications.map { NO_ERROR_STATUS_CODE }
             end
           end
+
+          describe 'failure' do
+
+            context 'several failures' do
+
+              before do
+                allow(IO).to receive(:select).and_return [], [], [[socket]], [], [], [[socket]], []
+                allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 2].pack('ccN'), [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 5].pack('ccN')
+              end
+
+              it 'repones the connection' do
+                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_yield(socket).exactly(3).times
+                pusher.push notifications
+              end
+
+              it 'returns the statuses' do
+                expect(pusher.push notifications).to eq [
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  PROCESSING_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  MISSING_DEVICE_TOKEN_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE
+                ]
+              end
+            end
+
+            context 'failing first notification' do
+              before do
+                allow(IO).to receive(:select).and_return [], [[socket]], []
+                allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+              end
+
+              it 'repones the connection' do
+                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_yield(socket).twice
+                pusher.push notifications
+              end
+
+              it 'returns the statuses' do
+                expect(pusher.push notifications).to eq [
+                  PROCESSING_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE
+                ]
+              end
+            end
+
+            context 'failing last notification' do
+              before do
+                allow(IO).to receive(:select).and_return [], [], [], [], [], [], [], [], [], [[socket]]
+                allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 9].pack 'ccN'
+              end
+
+              it 'returns the statuses' do
+                expect(pusher.push notifications).to eq [
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  NO_ERROR_STATUS_CODE,
+                  PROCESSING_ERROR_STATUS_CODE
+                ]
+              end
+            end
+          end
         end
       end
     end
