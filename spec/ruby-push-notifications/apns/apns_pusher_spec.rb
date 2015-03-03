@@ -14,7 +14,7 @@ module RubyPushNotifications
 
       describe '#push' do
 
-        describe 'a single notification' do
+        context 'a single notification' do
           let(:notification) { build :apns_notification }
 
           describe 'success' do
@@ -22,7 +22,7 @@ module RubyPushNotifications
             before { allow(IO).to receive(:select).and_return [[]] }
 
             it 'writes the notification to the socket' do
-              expect(socket).to receive(:write).with(notification.to_apns_binary(NO_ERROR_STATUS_CODE))
+              expect(socket).to receive(:write).with(notification.to_apns_binary(0))
               pusher.push [notification]
             end
 
@@ -32,7 +32,7 @@ module RubyPushNotifications
             end
 
             it 'returns success' do
-              expect(pusher.push [notification]).to eq [0]
+              expect(pusher.push [notification]).to eq [NO_ERROR_STATUS_CODE]
             end
           end
 
@@ -45,6 +45,31 @@ module RubyPushNotifications
 
             it 'returns the error' do
               expect(pusher.push [notification]).to eq [PROCESSING_ERROR_STATUS_CODE]
+            end
+          end
+        end
+
+        context 'several notifications' do
+          let(:notifications) { build_list :apns_notification, 10 }
+
+          describe 'success' do
+
+            before { allow(IO).to receive(:select).and_return [[]] }
+
+            it 'writes the notifications to the socket' do
+              notifications.each_with_index do |notification, i|
+                expect(socket).to receive(:write).with(notification.to_apns_binary(i)).once
+              end
+              pusher.push notifications
+            end
+
+            it 'flushes the socket contents' do
+              expect(socket).to receive(:flush).once
+              pusher.push notifications
+            end
+
+            it 'returns success' do
+              expect(pusher.push notifications).to eq notifications.map { NO_ERROR_STATUS_CODE }
             end
           end
         end
