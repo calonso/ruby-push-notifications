@@ -15,6 +15,10 @@ module RubyPushNotifications
             3, 4, notif_id, 4, 4, (Time.now + APNSNotification::WEEKS_4).to_i, 5, 1, 10
           ].pack 'cNcnH64cna*cnNcnNcnc'
         end
+
+        it 'validates the data'
+
+        it 'validates the token'
       end
     end
   end
