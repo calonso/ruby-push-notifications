@@ -23,6 +23,11 @@ module RubyPushNotifications
           end.to yield_successive_args apns_encode(json, device_tokens[0], notif_id), apns_encode(json, device_tokens[1], notif_id+1)
         end
 
+        it 'caches the payload' do
+          expect(JSON).to receive(:dump).with(data).once.and_return 'dummy string'
+          notification.each_message(notif_id) { }
+        end
+
         it 'validates the data'
 
         it 'validates the tokens'
