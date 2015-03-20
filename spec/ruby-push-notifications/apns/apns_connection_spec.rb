@@ -7,8 +7,6 @@ module RubyPushNotifications
       let(:tcp_socket) { instance_double(TCPSocket).as_null_object }
       let(:ssl_socket) { instance_double(OpenSSL::SSL::SSLSocket).as_null_object }
 
-
-
       describe '::open' do
         before do
           allow(TCPSocket).to receive(:new).with('gateway.sandbox.push.apple.com', 2195).and_return tcp_socket

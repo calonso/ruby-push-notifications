@@ -9,30 +9,32 @@ module RubyPushNotifications
       end
 
       def push(notifications)
-        results = []
-        while results.count < notifications.count
-          APNSConnection.open(@certificate, @sandbox) do |socket|
-            notifications[results.count..-1].each_with_index do |notif, i|
-              socket.write notif.to_apns_binary i
+        conn = APNSConnection.open @certificate, @sandbox
 
-              if i == notifications.count-1
-                socket.flush
-                rs, = IO.select([socket], nil, nil, 2)
-              else
-                rs, = IO.select([socket], [socket])
-              end
-              if rs && rs.any?
-                err = rs[0].read(6).unpack 'ccN'
-                results.slice! err[2]..-1
-                results << err[1]
-                break
-              else
-                results << NO_ERROR_STATUS_CODE
-              end
+        notifications.each_with_index do |notif, i|
+          results = []
+          notif.each_message(i) do |msg, j|
+            conn.write msg
+
+            if i == notifications.count-1 && j == notif.count-1
+              conn.flush
+              rs, = IO.select([conn], nil, nil, 2)
+            else
+              rs, = IO.select([conn], [conn])
+            end
+            if rs && rs.any?
+              err = rs[0].read(6).unpack 'ccN'
+              results.slice! err[2]..-1
+              results << err[1]
+              conn = APNSConnection.open @certificate, @sandbox
+            else
+              results << NO_ERROR_STATUS_CODE
             end
           end
+          notif.results = results
         end
-        return results
+
+        conn.close
       end
     end
   end

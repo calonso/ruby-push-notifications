@@ -13,7 +13,7 @@ module RubyPushNotifications
           json = JSON.dump data
           expect do |b|
             notification.each_message notif_id, &b
-          end.to yield_successive_args [apns_binary(json, device_tokens[0], notif_id), notif_id], [apns_binary(json, device_tokens[1], notif_id+1), notif_id+1]
+          end.to yield_successive_args [apns_binary(json, device_tokens[0], notif_id), 0], [apns_binary(json, device_tokens[1], notif_id+1), 1]
         end
 
         it 'caches the payload' do

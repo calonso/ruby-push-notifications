@@ -5,52 +5,106 @@ module RubyPushNotifications
 
       let(:sandbox) { true }
       let(:certificate) { 'abc' }
-      let(:socket) { double flush: true, write: true }
+      let(:tcp_socket) { instance_double(TCPSocket).as_null_object }
+      let(:ssl_socket) { instance_double(OpenSSL::SSL::SSLSocket).as_null_object }
       let(:pusher) { APNSPusher.new certificate, sandbox }
+      let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+      let(:data) { { a: 1 } }
 
       before do
-        allow(APNSConnection).to receive(:open).with(certificate, sandbox).and_yield socket
+        allow(APNSConnection).to receive(:open).with(certificate, sandbox).and_return connection
       end
 
       describe '#push' do
 
         context 'a single notification' do
-          let(:notification) { build :apns_notification }
 
-          describe 'success' do
+          context 'containing a single destination' do
 
-            before { allow(IO).to receive(:select).and_return [[]] }
+            let(:token) { generate :apns_token }
+            let(:notification) { build :apns_notification, data: data, tokens: [token] }
 
-            it 'writes the notification to the socket' do
-              expect(socket).to receive(:write).with(notification.to_apns_binary(0))
-              pusher.push [notification]
+            describe 'success' do
+
+              before { allow(IO).to receive(:select).and_return [[]] }
+
+              it 'writes the notification to the socket' do
+                expect(connection).to receive(:write).with apns_binary(data, token, 0)
+                pusher.push [notification]
+              end
+
+              it 'flushes the socket contents' do
+                expect(connection).to receive(:flush)
+                pusher.push [notification]
+              end
+
+              it 'saves the results into the notification' do
+                expect do
+                  pusher.push [notification]
+                end.to change { notification.results }.from(nil).to [NO_ERROR_STATUS_CODE]
+              end
             end
 
-            it 'flushes the socket contents' do
-              expect(socket).to receive(:flush)
-              pusher.push [notification]
-            end
+            describe 'failure' do
 
-            it 'returns success' do
-              expect(pusher.push [notification]).to eq [NO_ERROR_STATUS_CODE]
+              before do
+                allow(IO).to receive(:select).and_return [[ssl_socket]]
+                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+              end
+
+              it 'returns the error' do
+                expect do
+                  pusher.push [notification]
+                end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE]
+              end
             end
           end
 
-          describe 'failure' do
+          context 'containing several destinations' do
+            let(:tokens) { [generate(:apns_token), generate(:apns_token)] }
+            let(:notification) { build :apns_notification, data: data, tokens: tokens }
 
-            before do
-              allow(IO).to receive(:select).and_return [[socket]]
-              allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+            describe 'success' do
+
+              before { allow(IO).to receive(:select).and_return [[]] }
+
+              it 'writes the messages to the socket' do
+                expect(connection).to receive(:write).with apns_binary(data, tokens[0], 0)
+                expect(connection).to receive(:write).with apns_binary(data, tokens[1], 1)
+                pusher.push [notification]
+              end
+
+              it 'flushes the socket contents' do
+                expect(connection).to receive(:flush).once
+                pusher.push [notification]
+              end
+
+              it 'saves the results into the notification' do
+                expect do
+                  pusher.push [notification]
+                end.to change { notification.results }.from(nil).to [NO_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+              end
             end
 
-            it 'returns the error' do
-              expect(pusher.push [notification]).to eq [PROCESSING_ERROR_STATUS_CODE]
+            describe 'failure' do
+
+              before do
+                allow(IO).to receive(:select).and_return [[ssl_socket]], []
+                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+              end
+
+              it 'returns the error' do
+                expect do
+                  pusher.push [notification]
+                end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+              end
             end
           end
         end
 
         context 'several notifications' do
-          let(:notifications) { build_list :apns_notification, 10 }
+          let(:tokens) { (0...10).map { generate:apns_token } }
+          let(:notifications) { tokens.map { |token| build :apns_notification, data: data, tokens: [token] } }
 
           describe 'success' do
 
@@ -58,18 +112,20 @@ module RubyPushNotifications
 
             it 'writes the notifications to the socket' do
               notifications.each_with_index do |notification, i|
-                expect(socket).to receive(:write).with(notification.to_apns_binary(i)).once
+                expect(connection).to receive(:write).with(apns_binary(data, tokens[i], i)).once
               end
               pusher.push notifications
             end
 
             it 'flushes the socket contents' do
-              expect(socket).to receive(:flush).once
+              expect(connection).to receive(:flush).once
               pusher.push notifications
             end
 
             it 'returns success' do
-              expect(pusher.push notifications).to eq notifications.map { NO_ERROR_STATUS_CODE }
+              expect do
+                pusher.push notifications
+              end.to change { notifications.map { |n| n.results } }.from([nil]*10).to([[NO_ERROR_STATUS_CODE]]*10)
             end
           end
 
@@ -78,77 +134,83 @@ module RubyPushNotifications
             context 'several failures' do
 
               before do
-                allow(IO).to receive(:select).and_return [], [], [[socket]], [], [], [[socket]], []
-                allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 2].pack('ccN'), [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 5].pack('ccN')
+                allow(IO).to receive(:select).and_return [], [], [[ssl_socket]], [], [], [[ssl_socket]], []
+                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 2].pack('ccN'), [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 5].pack('ccN')
               end
 
               it 'repones the connection' do
-                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_yield(socket).exactly(3).times
+                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_return(connection).exactly(3).times
                 pusher.push notifications
               end
 
               it 'returns the statuses' do
-                expect(pusher.push notifications).to eq [
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  PROCESSING_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  MISSING_DEVICE_TOKEN_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE
-                ]
+                expect do
+                  pusher.push notifications
+                end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [PROCESSING_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [MISSING_DEVICE_TOKEN_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE]
+                  ]
               end
             end
 
             context 'failing first notification' do
               before do
-                allow(IO).to receive(:select).and_return [], [[socket]], []
-                allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                allow(IO).to receive(:select).and_return [[ssl_socket]], []
+                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
               end
 
               it 'repones the connection' do
-                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_yield(socket).twice
+                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_return(connection).twice
                 pusher.push notifications
               end
 
               it 'returns the statuses' do
-                expect(pusher.push notifications).to eq [
-                  PROCESSING_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE
-                ]
+                expect do
+                  pusher.push notifications
+                end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
+                    [PROCESSING_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE]
+                  ]
               end
             end
 
             context 'failing last notification' do
               before do
-                allow(IO).to receive(:select).and_return [], [], [], [], [], [], [], [], [], [[socket]]
-                allow(socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 9].pack 'ccN'
+                allow(IO).to receive(:select).and_return [], [], [], [], [], [], [], [], [], [[ssl_socket]]
+                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 9].pack 'ccN'
               end
 
               it 'returns the statuses' do
-                expect(pusher.push notifications).to eq [
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  NO_ERROR_STATUS_CODE,
-                  PROCESSING_ERROR_STATUS_CODE
-                ]
+                expect do
+                  pusher.push notifications
+                end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [PROCESSING_ERROR_STATUS_CODE]
+                  ]
               end
             end
           end
