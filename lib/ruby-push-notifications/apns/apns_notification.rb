@@ -7,6 +7,8 @@ module RubyPushNotifications
 
       WEEKS_4 = 2419200 # 4 weeks
 
+      attr_accessor :results
+
       def initialize(tokens, data)
         @tokens = tokens
         @data = data
@@ -22,9 +24,14 @@ module RubyPushNotifications
           # Notification ID => Id: 3, length: 4, data: notif id as int
           # Expiration Date => Id: 4, length: 4, data: Unix timestamp as int
           # Priority => Id: 5, length: 1, data: 10 as 1 byte int
-          bytes = device_token(token) + payload + notification_id(starting_id + i) + expiration_date + priority
-          yield [2, bytes.bytesize, bytes].pack 'cNa*'
+          this_id = starting_id + i
+          bytes = device_token(token) + payload + notification_id(this_id) + expiration_date + priority
+          yield [2, bytes.bytesize, bytes].pack('cNa*'), this_id
         end
+      end
+
+      def count
+        @tokens.count
       end
 
       private
