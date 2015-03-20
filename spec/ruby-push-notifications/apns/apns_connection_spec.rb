@@ -3,11 +3,13 @@ module RubyPushNotifications
   module APNS
     describe APNSConnection do
 
-      describe '::open' do
-        let(:tcp_socket) { double(TCPSocket, close: true) }
-        let(:ssl_socket) { double(OpenSSL::SSL::SSLSocket, :sync= => true, connect: true, close: true) }
-        let(:cert) { File.read 'spec/support/dummy.pem' }
+      let(:cert) { File.read 'spec/support/dummy.pem' }
+      let(:tcp_socket) { instance_double(TCPSocket).as_null_object }
+      let(:ssl_socket) { instance_double(OpenSSL::SSL::SSLSocket).as_null_object }
 
+
+
+      describe '::open' do
         before do
           allow(TCPSocket).to receive(:new).with('gateway.sandbox.push.apple.com', 2195).and_return tcp_socket
           allow(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, an_instance_of(OpenSSL::SSL::SSLContext)).and_return ssl_socket
@@ -16,13 +18,53 @@ module RubyPushNotifications
         it 'creates the connection' do
           expect(TCPSocket).to receive(:new).with('gateway.sandbox.push.apple.com', 2195).and_return tcp_socket
           expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, an_instance_of(OpenSSL::SSL::SSLContext)).and_return ssl_socket
-          APNSConnection.open(cert, true) {}
+          APNSConnection.open cert, true
         end
 
-        it 'yields the ssl socket' do
-          expect do |b|
-            APNSConnection.open(cert, true, &b)
-          end.to yield_with_args ssl_socket
+        it 'returns an instance of APNSConnection' do
+          expect(APNSConnection.open cert, true).to be_a APNSConnection
+        end
+      end
+
+      describe '#close' do
+        let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+
+        it 'closes the ssl socket' do
+          expect(ssl_socket).to receive(:close)
+          connection.close
+        end
+
+        it 'closes the tcp socket' do
+          expect(tcp_socket).to receive(:close)
+          connection.close
+        end
+      end
+
+      describe '#write' do
+        let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+        let(:contents_string) { 'the contents string' }
+
+        it 'writes the ssl socket' do
+          expect(ssl_socket).to receive(:write).with contents_string
+          connection.write contents_string
+        end
+      end
+
+      describe '#flush' do
+        let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+
+        it 'flushes the ssl socket' do
+          expect(ssl_socket).to receive :flush
+          connection.flush
+        end
+      end
+
+      describe 'IO behavior' do
+        let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+
+        it 'can be selected' do
+          allow(ssl_socket).to receive(:to_io).and_return IO.new(IO.sysopen('/dev/null'))
+          IO.select [connection]
         end
       end
     end
