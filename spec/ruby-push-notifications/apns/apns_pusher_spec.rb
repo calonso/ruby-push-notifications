@@ -5,10 +5,8 @@ module RubyPushNotifications
 
       let(:sandbox) { true }
       let(:certificate) { 'abc' }
-      let(:tcp_socket) { instance_double(TCPSocket).as_null_object }
-      let(:ssl_socket) { instance_double(OpenSSL::SSL::SSLSocket).as_null_object }
       let(:pusher) { APNSPusher.new certificate, sandbox }
-      let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+      let(:connection) { instance_double(APNSConnection).as_null_object }
       let(:data) { { a: 1 } }
 
       before do
@@ -26,7 +24,7 @@ module RubyPushNotifications
 
             describe 'success' do
 
-              before { allow(IO).to receive(:select).and_return [[]] }
+              before { allow(IO).to receive(:select).and_return [] }
 
               it 'writes the notification to the socket' do
                 expect(connection).to receive(:write).with apns_binary(data, token, 0)
@@ -48,11 +46,16 @@ module RubyPushNotifications
             describe 'failure' do
 
               before do
-                allow(IO).to receive(:select).and_return [[ssl_socket]]
-                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                allow(IO).to receive(:select).and_return [[connection]]
+                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
               end
 
-              it 'returns the error' do
+              it 'does not retry' do
+                expect(connection).to receive(:write).with(apns_binary(data, token, 0)).once
+                pusher.push [notification]
+              end
+
+              it 'saves the error' do
                 expect do
                   pusher.push [notification]
                 end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE]
@@ -66,7 +69,7 @@ module RubyPushNotifications
 
             describe 'success' do
 
-              before { allow(IO).to receive(:select).and_return [[]] }
+              before { allow(IO).to receive(:select).and_return [] }
 
               it 'writes the messages to the socket' do
                 expect(connection).to receive(:write).with apns_binary(data, tokens[0], 0)
@@ -88,15 +91,69 @@ module RubyPushNotifications
 
             describe 'failure' do
 
+              let(:connection2) { instance_double(APNSConnection).as_null_object }
+
               before do
-                allow(IO).to receive(:select).and_return [[ssl_socket]], []
-                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                allow(APNSConnection).to receive(:open).with(certificate, sandbox).and_return connection, connection2
               end
 
-              it 'returns the error' do
-                expect do
+              context 'failing first' do
+                before do
+                  allow(IO).to receive(:select).and_return [[connection]], []
+                  allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                end
+
+                it 'sends the each notification once and to the expected connection instance' do
+                  expect(connection).to receive(:write).with(apns_binary(data, tokens[0], 0)).once
+                  expect(connection2).to receive(:write).with(apns_binary(data, tokens[1], 1)).once
                   pusher.push [notification]
-                end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+                end
+
+                it 'stores the error' do
+                  expect do
+                    pusher.push [notification]
+                  end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+                end
+              end
+
+              context 'failing first but delayed error' do
+                before do
+                  allow(IO).to receive(:select).and_return [], [[connection]], []
+                  allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                end
+
+                it 'sends the second notification twice' do
+                  expect(connection).to receive(:write).with(apns_binary(data, tokens[0], 0)).once
+                  expect(connection).to receive(:write).with(apns_binary(data, tokens[1], 1)).once
+                  expect(connection2).to receive(:write).with(apns_binary(data, tokens[1], 1)).once
+                  pusher.push [notification]
+                end
+
+                it 'stores the error' do
+                  expect do
+                    pusher.push [notification]
+                  end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+                end
+              end
+
+              context 'failing last' do
+                before do
+                  allow(IO).to receive(:select).and_return [], [[connection]]
+                  allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 1].pack 'ccN'
+                end
+
+                it 'sends the second notification just once' do
+                  expect(connection).to receive(:write).with(apns_binary(data, tokens[0], 0)).once
+                  expect(connection).to receive(:write).with(apns_binary(data, tokens[1], 1)).once
+                  expect(connection2).to_not receive(:write)
+                  pusher.push [notification]
+                end
+
+                it 'stores the error' do
+                  expect do
+                    pusher.push [notification]
+                  end.to change { notification.results }.from(nil).to [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE]
+                end
               end
             end
           end
@@ -108,7 +165,7 @@ module RubyPushNotifications
 
           describe 'success' do
 
-            before { allow(IO).to receive(:select).and_return [[]] }
+            before { allow(IO).to receive(:select).and_return [] }
 
             it 'writes the notifications to the socket' do
               notifications.each_with_index do |notification, i|
@@ -134,8 +191,8 @@ module RubyPushNotifications
             context 'several failures' do
 
               before do
-                allow(IO).to receive(:select).and_return [], [], [[ssl_socket]], [], [], [[ssl_socket]], []
-                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 2].pack('ccN'), [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 5].pack('ccN')
+                allow(IO).to receive(:select).and_return [], [], [[connection]], [], [], [[connection]], []
+                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack('ccN'), [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 2].pack('ccN')
               end
 
               it 'repones the connection' do
@@ -147,12 +204,12 @@ module RubyPushNotifications
                 expect do
                   pusher.push notifications
                 end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
                     [PROCESSING_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
                     [MISSING_DEVICE_TOKEN_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
+                    [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
@@ -163,8 +220,8 @@ module RubyPushNotifications
 
             context 'failing first notification' do
               before do
-                allow(IO).to receive(:select).and_return [[ssl_socket]], []
-                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                allow(IO).to receive(:select).and_return [[connection]], []
+                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
               end
 
               it 'repones the connection' do
@@ -192,8 +249,8 @@ module RubyPushNotifications
 
             context 'failing last notification' do
               before do
-                allow(IO).to receive(:select).and_return [], [], [], [], [], [], [], [], [], [[ssl_socket]]
-                allow(ssl_socket).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 9].pack 'ccN'
+                allow(IO).to receive(:select).and_return [], [], [], [], [], [], [], [], [], [[connection]]
+                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 9].pack 'ccN'
               end
 
               it 'returns the statuses' do
