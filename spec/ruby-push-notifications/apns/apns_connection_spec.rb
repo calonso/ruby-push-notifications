@@ -48,6 +48,15 @@ module RubyPushNotifications
         end
       end
 
+      describe '#read' do
+        let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
+
+        it 'writes the ssl socket' do
+          expect(ssl_socket).to receive(:read).with 6
+          connection.read 6
+        end
+      end
+
       describe '#flush' do
         let(:connection) { APNSConnection.new tcp_socket, ssl_socket }
 

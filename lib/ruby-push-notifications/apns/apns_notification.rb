@@ -25,7 +25,7 @@ module RubyPushNotifications
           # Expiration Date => Id: 4, length: 4, data: Unix timestamp as int
           # Priority => Id: 5, length: 1, data: 10 as 1 byte int
           bytes = device_token(token) + payload + notification_id(starting_id + i) + expiration_date + priority
-          yield [2, bytes.bytesize, bytes].pack('cNa*'), i
+          yield [2, bytes.bytesize, bytes].pack 'cNa*'
         end
       end
 

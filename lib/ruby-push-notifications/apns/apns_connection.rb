@@ -1,6 +1,7 @@
 
 require 'socket'
 require 'openssl'
+require 'forwardable'
 
 module RubyPushNotifications
   module APNS
@@ -11,7 +12,7 @@ module RubyPushNotifications
       APNS_PRODUCTION_URL = 'gateway.push.apple.com'
       APNS_PORT = 2195
 
-      def_delegators :@sslsock, :write, :flush, :to_io
+      def_delegators :@sslsock, :write, :flush, :to_io, :read
 
       def self.open(cert, sandbox)
         ctx = OpenSSL::SSL::SSLContext.new
