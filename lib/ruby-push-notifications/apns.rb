@@ -8,7 +8,7 @@ module RubyPushNotifications::APNS
   INVALID_TOKEN_SIZE_STATUS_CODE = 5
   INVALID_TOPIC_SIZE_STATUS_CODE = 6
   INVALID_PAYLOAD_SIZE_STATUS_CODE = 7
-  INVALID_TOKEN_STATUS_CODE = 8 # The token is for dev and the env is prod or viceversa
+  INVALID_TOKEN_STATUS_CODE = 8 # The token is for dev and the env is prod or viceversa, or simply wrong
   SHUTDOWN_STATUS_CODE = 10
   UNKNOWN_ERROR_STATUS_CODE = 255
 end

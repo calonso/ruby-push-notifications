@@ -22,7 +22,6 @@ module RubyPushNotifications
         h = host sandbox
         socket = TCPSocket.new h, APNS_PORT
         ssl = OpenSSL::SSL::SSLSocket.new socket, ctx
-        ssl.sync = true
         ssl.connect
 
         new socket, ssl
