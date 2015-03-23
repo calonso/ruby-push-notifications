@@ -5,3 +5,4 @@ module RubyPushNotifications
 end
 
 require 'ruby-push-notifications/apns'
+require 'ruby-push-notifications/gcm'
