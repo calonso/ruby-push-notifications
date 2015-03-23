@@ -179,7 +179,7 @@ module RubyPushNotifications
               pusher.push notifications
             end
 
-            it 'returns success' do
+            it 'saves results' do
               expect do
                 pusher.push notifications
               end.to change { notifications.map { |n| n.results } }.from([nil]*10).to([[NO_ERROR_STATUS_CODE]]*10)
@@ -188,19 +188,42 @@ module RubyPushNotifications
 
           describe 'failure' do
 
-            context 'several failures' do
+            context 'several async failures' do
+
+              let(:connection2) { instance_double(APNSConnection).as_null_object }
+              let(:connection3) { instance_double(APNSConnection).as_null_object }
+              let(:connection4) { instance_double(APNSConnection).as_null_object }
 
               before do
-                allow(IO).to receive(:select).and_return [], [], [[connection]], [], [], [[connection]], []
-                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack('ccN'), [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 2].pack('ccN')
+                allow(IO).to receive(:select).and_return [], [], [[connection]], [], [], [[connection2]], [], [], [], [], [], [], [[connection3]]
+                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack('ccN')
+                allow(connection2).to receive(:read).with(6).and_return [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 2].pack('ccN')
+                allow(connection3).to receive(:read).with(6).and_return [8, INVALID_TOPIC_SIZE_STATUS_CODE, 9].pack('ccN')
+                allow(APNSConnection).to receive(:open).with(certificate, sandbox).and_return connection, connection2, connection3, connection4
               end
 
               it 'repones the connection' do
-                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_return(connection).exactly(3).times
+                (0..2).each do |i|
+                  expect(connection).to receive(:write).with(apns_binary(data, tokens[i], i)).once
+                end
+                expect(connection).to_not receive(:write).with apns_binary(data, tokens[3], 3)
+
+                expect(connection2).to_not receive(:write).with apns_binary(data, tokens[0], 0)
+                (1..3).each do |i|
+                  expect(connection2).to receive(:write).with(apns_binary(data, tokens[i], i)).once
+                end
+                expect(connection2).to_not receive(:write).with apns_binary(data, tokens[4], 4)
+
+                expect(connection3).to_not receive(:write).with apns_binary(data, tokens[2], 2)
+                (3..9).each do |i|
+                  expect(connection3).to receive(:write).with(apns_binary(data, tokens[i], i)).once
+                end
+
+                expect(connection4).to_not receive :write
                 pusher.push notifications
               end
 
-              it 'returns the statuses' do
+              it 'saves the statuses' do
                 expect do
                   pusher.push notifications
                 end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
@@ -213,60 +236,58 @@ module RubyPushNotifications
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE]
+                    [INVALID_TOPIC_SIZE_STATUS_CODE]
                   ]
               end
             end
 
-            context 'failing first notification' do
+            context 'several sync failures' do
+
+              let(:connection2) { instance_double(APNSConnection).as_null_object }
+              let(:connection3) { instance_double(APNSConnection).as_null_object }
+              let(:connection4) { instance_double(APNSConnection).as_null_object }
+
               before do
-                allow(IO).to receive(:select).and_return [[connection]], []
-                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack 'ccN'
+                allow(IO).to receive(:select).and_return [[connection]], [], [[connection2]], [], [], [], [], [], [], [[connection3]]
+                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack('ccN')
+                allow(connection2).to receive(:read).with(6).and_return [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 2].pack('ccN')
+                allow(connection3).to receive(:read).with(6).and_return [8, INVALID_TOPIC_SIZE_STATUS_CODE, 9].pack('ccN')
+                allow(APNSConnection).to receive(:open).with(certificate, sandbox).and_return connection, connection2, connection3, connection4
               end
 
               it 'repones the connection' do
-                expect(APNSConnection).to receive(:open).with(certificate, sandbox).and_return(connection).twice
+                expect(connection).to receive(:write).with(apns_binary(data, tokens[0], 0)).once
+                expect(connection).to_not receive(:write).with apns_binary(data, tokens[1], 1)
+
+                expect(connection2).to_not receive(:write).with apns_binary(data, tokens[0], 0)
+                (1..2).each do |i|
+                  expect(connection2).to receive(:write).with(apns_binary(data, tokens[i], i)).once
+                end
+                expect(connection2).to_not receive(:write).with apns_binary(data, tokens[3], 3)
+
+                expect(connection3).to_not receive(:write).with apns_binary(data, tokens[2], 2)
+                (3..9).each do |i|
+                  expect(connection3).to receive(:write).with(apns_binary(data, tokens[i], i)).once
+                end
+
+                expect(connection4).to_not receive :write
                 pusher.push notifications
               end
 
-              it 'returns the statuses' do
+              it 'saves the statuses' do
                 expect do
                   pusher.push notifications
                 end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
                     [PROCESSING_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
+                    [MISSING_DEVICE_TOKEN_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE]
-                  ]
-              end
-            end
-
-            context 'failing last notification' do
-              before do
-                allow(IO).to receive(:select).and_return [], [], [], [], [], [], [], [], [], [[connection]]
-                allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 9].pack 'ccN'
-              end
-
-              it 'returns the statuses' do
-                expect do
-                  pusher.push notifications
-                end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [NO_ERROR_STATUS_CODE],
-                    [PROCESSING_ERROR_STATUS_CODE]
+                    [INVALID_TOPIC_SIZE_STATUS_CODE]
                   ]
               end
             end
