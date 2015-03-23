@@ -8,11 +8,11 @@ module RubyPushNotifications
         @data = data
       end
 
-      def to_gcm_json
-        {
+      def as_gcm_json
+        JSON.dump(
           registration_ids: @registration_ids,
           data: @data
-        }
+        )
       end
 
     end

@@ -49,7 +49,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.6)
   factory_girl (~> 4.0)
-  rake
+  rake (~> 10.4)
   rspec (~> 3.2)
   ruby-push-notifications!
   webmock (~> 1.20)

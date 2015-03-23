@@ -20,6 +20,8 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+TODO: APNS Feedback Service
+
 ## Contributing
 
 1. Fork it ( https://github.com/calonso/ruby-push-notifications/fork )

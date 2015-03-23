@@ -8,7 +8,7 @@ module RubyPushNotifications
       let(:notification) { build :gcm_notification, registration_ids: registration_ids, data: data }
 
       it 'builds the right gcm json' do
-        expect(notification.to_gcm_json).to eq(
+        expect(notification.as_gcm_json).to eq JSON.dump(
           registration_ids: registration_ids,
           data: data
         )
