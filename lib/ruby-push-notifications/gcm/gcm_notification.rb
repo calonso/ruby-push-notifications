@@ -3,6 +3,8 @@ module RubyPushNotifications
   module GCM
     class GCMNotification
 
+      attr_accessor :results
+
       def initialize(registration_ids, data)
         @registration_ids = registration_ids
         @data = data
@@ -14,7 +16,6 @@ module RubyPushNotifications
           data: @data
         )
       end
-
     end
   end
 end

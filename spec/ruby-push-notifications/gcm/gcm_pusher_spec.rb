@@ -31,6 +31,12 @@ module RubyPushNotifications
                 once
         end
 
+        it 'sets results to notifications' do
+          expect do
+            pusher.push [notif1, notif2]
+          end.to change { [notif1, notif2].map &:results }.from([nil, nil]).to [GCMResponse.new(200, response)]*2
+        end
+
         it 'splits notifications with more than 1000 destinations in parts'
 
       end

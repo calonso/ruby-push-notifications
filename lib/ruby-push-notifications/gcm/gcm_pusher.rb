@@ -9,7 +9,7 @@ module RubyPushNotifications
 
       def push(notifications)
         notifications.each do |notif|
-          GCMConnection.post notif.as_gcm_json, @key
+          notif.results = GCMConnection.post notif.as_gcm_json, @key
         end
       end
     end
