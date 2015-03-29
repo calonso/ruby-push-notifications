@@ -111,3 +111,5 @@ def apns_binary(json, token, id)
     3, 4, id, 4, 4, (Time.now + RubyPushNotifications::APNS::APNSNotification::WEEKS_4).to_i, 5, 1, 10
   ].pack 'cNcnH64cna*cnNcnNcnc'
 end
+
+WebMock.disable_net_connect!(:allow => "codeclimate.com")
