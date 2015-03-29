@@ -1,4 +1,7 @@
 
+require 'codeclimate-test-reporter'
+CodeClimate::TestReporter.start
+
 Bundler.setup
 Bundler.require :defaults, :development
 require 'webmock/rspec'
