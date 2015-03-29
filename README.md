@@ -1,6 +1,12 @@
 # Ruby::Push::Notifications [![Build Status](https://travis-ci.org/calonso/ruby-push-notifications.svg)](https://travis-ci.org/calonso/ruby-push-notifications) [![Dependency Status](https://gemnasium.com/calonso/ruby-push-notifications.svg)](https://gemnasium.com/calonso/ruby-push-notifications)
 
-TODO: Write a gem description
+###iOS and Android Push Notifications made easy!
+
+## Features
+
+* iOS and Android support
+* Complete error and retry management
+* Easy and intuitive API
 
 ## Installation
 
@@ -18,9 +24,28 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+**Ruby Push Notifications** gem usage is really easy.
 
-TODO: APNS Feedback Service
+1. After installing, require the gem
+2. Create one or more notifications
+3. Create the corresponding `pusher`
+4. Push!!
+5. Get feedback
+
+For completely detailed examples:
+
+1. [Apple iOS example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/apns.rb)
+2. [Google Android example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/gcm.rb)
+
+## Pending tasks
+
+Feel free to contribute!!
+
+* Validate iOS notifications format and max size
+* Validate iOS tokens format
+* Validate GCM registration ids format
+* Validate GCM notifications format and max size
+* Split GCM notifications in parts if more than 1000 destinations are given (currently raising exception)
 
 ## Contributing
 
