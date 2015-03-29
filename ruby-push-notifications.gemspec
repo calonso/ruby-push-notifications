@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = RubyPushNotifications::VERSION
   spec.authors       = ['Carlos Alonso']
   spec.email         = ['info@mrcalonso.com']
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ''
+  spec.summary       = %q{iOS and Android Push Notifications made easy!}
+  spec.description   = %q{Easy to use gem to send iOS and Android Push notifications}
+  spec.homepage      = 'https://github.com/calonso/ruby-push-notifications'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
