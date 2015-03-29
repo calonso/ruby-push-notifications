@@ -1,4 +1,4 @@
-# Ruby Push Notifications [![Build Status](https://travis-ci.org/calonso/ruby-push-notifications.svg)](https://travis-ci.org/calonso/ruby-push-notifications) [![Dependency Status](https://gemnasium.com/calonso/ruby-push-notifications.svg)](https://gemnasium.com/calonso/ruby-push-notifications)[![Gem Version](https://badge.fury.io/rb/ruby-push-notifications.svg)](http://badge.fury.io/rb/ruby-push-notifications)
+# Ruby Push Notifications [![Build Status](https://travis-ci.org/calonso/ruby-push-notifications.svg)](https://travis-ci.org/calonso/ruby-push-notifications) [![Dependency Status](https://gemnasium.com/calonso/ruby-push-notifications.svg)](https://gemnasium.com/calonso/ruby-push-notifications) [![Gem Version](https://badge.fury.io/rb/ruby-push-notifications.svg)](http://badge.fury.io/rb/ruby-push-notifications)
 
 ###iOS and Android Push Notifications made easy!
 
