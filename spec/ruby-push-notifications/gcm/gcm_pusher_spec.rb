@@ -10,9 +10,11 @@ module RubyPushNotifications
 
         let(:notif1) { build :gcm_notification }
         let(:notif2) { build :gcm_notification }
+        let(:response) { JSON.dump a: 1 }
 
         before do
-          stub_request(:post, 'https://android.googleapis.com/gcm/send')
+          stub_request(:post, 'https://android.googleapis.com/gcm/send').
+            to_return status: [200, 'OK'], body: response
         end
 
         it 'submits every notification' do
@@ -28,9 +30,6 @@ module RubyPushNotifications
               with(body: notif2.as_gcm_json, headers: { 'Content-Type' => 'application/json', 'Authorization' => "key=#{gcm_key}" }).
                 once
         end
-
-        # According to https://developer.android.com/google/gcm/server-ref.html#table3
-        it 'parses errors'
 
         it 'splits notifications with more than 1000 destinations in parts'
 

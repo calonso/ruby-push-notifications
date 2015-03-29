@@ -12,7 +12,6 @@ module RubyPushNotifications
           GCMConnection.post notif.as_gcm_json, @key
         end
       end
-
     end
   end
 end

@@ -7,10 +7,11 @@ module RubyPushNotifications
 
         let(:body) { 'abc' }
         let(:key)  { 'def' }
+        let(:response) { JSON.dump a: 1 }
 
         before do
           stub_request(:post, 'https://android.googleapis.com/gcm/send').
-            to_return status: [200, 'OK'], body: 'The body'
+            to_return status: [200, 'OK'], body: response
         end
 
         it 'runs the right request' do
@@ -22,11 +23,8 @@ module RubyPushNotifications
                 once
         end
 
-        it 'returns the response code' do
-          expect(GCMConnection.post body, key).to eq(
-            code: '200',
-            body: 'The body'
-            )
+        it 'returns the response encapsulated in a GCMResponse object' do
+          expect(GCMConnection.post body, key).to eq GCMResponse.new(200, response)
         end
       end
     end

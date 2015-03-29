@@ -24,7 +24,7 @@ module RubyPushNotifications
 
         response = http.post url.path, notification, headers
 
-        { code: response.code, body: response.body }
+        GCMResponse.new response.code.to_i, response.body
       end
     end
   end
