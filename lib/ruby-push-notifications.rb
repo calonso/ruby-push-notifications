@@ -1,8 +1,3 @@
-require "ruby-push-notifications/version"
-
-module RubyPushNotifications
-  # Your code goes here...
-end
-
+require 'ruby-push-notifications/version'
 require 'ruby-push-notifications/apns'
 require 'ruby-push-notifications/gcm'
