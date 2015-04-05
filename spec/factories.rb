@@ -7,4 +7,9 @@ FactoryGirl.define do
   sequence :gcm_registration_id do |i|
     "APA91bHPRgkF3JUikC4ENAHEeMrd41Zxv3hVZjC9KtT8OvPVGJ-hQMRKRrZuJAEcl7B338qju59zJMjw2DELjzEvxwYv7hH5Ynpc1ODQ0aT4U4OFEeco8ohsN5PjL1iC2dNtk2BAokeMCg2ZXKqpc8FXKmhX94kIxQ#{i}"
   end
+
+  sequence :mpns_device_url do |i|
+    "http://s.notify.live.net/u/1/bn1/HmQAAACP-0esPuxBSkzBNNXH4W0lV3lK-stEw6eRfpXX39uYbM7IwehXOTO9pRBjaaGECWOdD_7x5j5U4w4iXG4hGxer/d2luZG93c3Bob25lZGVmYXVsdA/EMDhx32Q5BG0DWnZpuVX1g/kRFAu0-jnhMQ-HG94rXzrbb0wQk#{i}"
+  end
+
 end
