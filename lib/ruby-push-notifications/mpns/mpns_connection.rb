@@ -37,12 +37,7 @@ module RubyPushNotifications
       # @return [Array]. The response of post
       # (http://msdn.microsoft.com/pt-br/library/windows/apps/ff941099)
       def self.post(n, cert)
-        notification_class = calculate_delay n.data[:type], n.data[:delay]
-        headers = {
-          CONTENT_TYPE_HEADER => XML_CONTENT_TYPE,
-          X_NOTIFICATION_CLASS => notification_class.to_s
-        }
-        headers[X_WINDOWSPHONE_TARGET] = WP_TARGETS[n.data[:type]] unless n.data[:type] == :raw
+        headers = build_headers(n.data[:type], n.data[:delay])
         body = n.as_mpns_xml
         responses = []
         n.device_urls.each do |url|
@@ -54,18 +49,28 @@ module RubyPushNotifications
             http.ca_file = cert
           end
           response = http.post url.path, body, headers
-          responses << { device_url: url.to_s, body: response.body, headers: response.to_hash, status_code: response.code.to_i }
+          responses << {
+            device_url: url.to_s,
+            body: response.body,
+            headers: response.to_hash,
+            status_code: response.code.to_i
+          }
         end
         responses
       end
 
-      # Calculate delay based on type notificaion
+      # Build Header based on type and delay
       #
       # @param type [Symbol]. The type of notification
       # @param delay [Symbol]. The delay to be used
-      # @return [Integer]. Correct delay based on notification type
-      def self.calculate_delay(type, delay)
-        BASEBATCH[type] + (BATCHADDS[delay] || 0)
+      # @return [Hash]. Correct delay based on notification type
+      def self.build_headers(type, delay)
+        headers = {
+          CONTENT_TYPE_HEADER => XML_CONTENT_TYPE,
+          X_NOTIFICATION_CLASS => "#{(BASEBATCH[type] + (BATCHADDS[delay] || 0))}"
+        }
+        headers[X_WINDOWSPHONE_TARGET] = WP_TARGETS[type] unless type == :raw
+        headers
       end
     end
   end
