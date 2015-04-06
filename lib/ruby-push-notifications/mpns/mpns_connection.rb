@@ -33,10 +33,10 @@ module RubyPushNotifications
       # submit the given notifications.
       #
       # @param n [MPNSNotification]. The notification object to POST
-      # @param cert [String]. Contents of the PEM encoded certificate
+      # @param optional cert [String]. Contents of the PEM encoded certificate
       # @return [Array]. The response of post
       # (http://msdn.microsoft.com/pt-br/library/windows/apps/ff941099)
-      def self.post(n, cert)
+      def self.post(n, cert = nil)
         headers = build_headers(n.data[:type], n.data[:delay])
         body = n.as_mpns_xml
         responses = []

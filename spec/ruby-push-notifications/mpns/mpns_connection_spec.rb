@@ -17,7 +17,7 @@ module RubyPushNotifications
         end
 
         it 'runs the right request' do
-          MPNSConnection.post toast_notification, nil
+          MPNSConnection.post toast_notification
 
           expect(WebMock).
             to have_requested(:post, toast_notification.device_urls[0]).
@@ -26,7 +26,7 @@ module RubyPushNotifications
         end
 
         it 'returns the response encapsulated in a Hash object' do
-          expect(MPNSConnection.post toast_notification, nil).to eq [
+          expect(MPNSConnection.post toast_notification).to eq [
             { device_url: toast_notification.device_urls[0],
               body: body,
               headers: headers,
