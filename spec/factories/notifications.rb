@@ -15,7 +15,7 @@ FactoryGirl.define do
 
   factory :mpns_notification, class: 'RubyPushNotifications::MPNS::MPNSNotification' do
     device_urls { [generate(:mpns_device_url)] }
-    data message: '<root><value1>hello</value1></root>'
+    data message: { value1: 'hello' }
 
     initialize_with { new device_urls, data }
   end

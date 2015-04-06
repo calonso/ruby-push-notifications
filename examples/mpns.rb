@@ -9,12 +9,6 @@ device_urls = [
   'Second device url here'
 ]
 
-# Notification with tile type
-# notification = RubyPushNotifications::MPNS::MPNSNotification.new device_urls, { count: 1, title: "Hello MPNS World!", type: :tile }
-
-# Notification with raw type
-# notification = RubyPushNotifications::MPNS::MPNSNotification.new device_urls, { message: '<root><value1>hello</value1><value2>wp8</value2></root>' }
-
 # Notification with toast type
 notification = RubyPushNotifications::MPNS::MPNSNotification.new device_urls, { title: 'Title', message: 'Hello MPNS World!', type: :toast }
 

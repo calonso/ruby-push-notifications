@@ -11,14 +11,14 @@ module RubyPushNotifications
       let(:tile_notification) { build :mpns_notification, device_urls: device_urls, data: tile_data }
 
       it 'builds the right mpns raw xml' do
-        xml = "<?xml version='1.0' encoding='utf-8'?>"
+        xml = '<?xml version="1.0" encoding="UTF-8"?>'
         xml << '<root><value1>hello</value1></root>'
         expect(raw_notification.as_mpns_xml).to eq xml
       end
 
       it 'builds the right mpns toast xml' do
-        xml = "<?xml version='1.0' encoding='utf-8'?>"
-        xml << "<wp:Notification xmlns:wp='WPNotification'><wp:Toast>"
+        xml = '<?xml version="1.0" encoding="UTF-8"?>'
+        xml << '<wp:Notification xmlns:wp="WPNotification"><wp:Toast>'
         xml << '<wp:Text1>Title</wp:Text1>'
         xml << '<wp:Text2>Hello MPNS World!</wp:Text2>'
         xml << '</wp:Toast></wp:Notification>'
@@ -26,8 +26,8 @@ module RubyPushNotifications
       end
 
       it 'builds the right mpns tile xml' do
-        xml = "<?xml version='1.0' encoding='utf-8'?>"
-        xml << "<wp:Notification xmlns:wp='WPNotification'><wp:Tile>"
+        xml = '<?xml version="1.0" encoding="UTF-8"?>'
+        xml << '<wp:Notification xmlns:wp="WPNotification"><wp:Tile>'
         xml << '<wp:Count>1</wp:Count>'
         xml << '<wp:Title>Hello MPNS World!</wp:Title>'
         xml << '</wp:Tile></wp:Notification>'
