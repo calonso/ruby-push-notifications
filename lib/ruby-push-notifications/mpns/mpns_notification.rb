@@ -8,13 +8,10 @@ module RubyPushNotifications
     #
     class MPNSNotification
 
-      # @return [Array]. Array with the results from sending this notification
-      attr_accessor :results, :data, :device_urls
+      # @return [Array]. Array with the results from sending this notification.
+      attr_accessor :results
 
-      # Initializes the notification
-      #
-      # @param [Array]. Array with the receiver's device urls.
-      # @param [Hash]. Payload to send.
+      # @return [Hash]. Payload to send.
       #   Toast :title => a bold message
       #     :message => the small message
       #     :param => a string parameter that is passed to the app
@@ -25,6 +22,15 @@ module RubyPushNotifications
       #     :back_title => a title on the back of the tile
       #     :back_content => some content (text) for the back
       #   Raw :message => the full Hash message body
+      attr_accessor :data
+
+      # @return [Array]. Array with the receiver's MPNS device URLs.
+      attr_accessor :device_urls
+
+      # Initializes the notification
+      #
+      # @param [Array]. Array with the receiver's device urls.
+      # @param [Hash]. Payload to send.
       def initialize(device_urls, data)
         @device_urls = device_urls
         @data = data
@@ -61,6 +67,12 @@ module RubyPushNotifications
           xml.root { build_hash(xml, data[:message]) }
         end
         xml.target!
+      end
+
+      def each_device
+        @device_urls.each do |url|
+          yield(URI.parse url)
+        end
       end
 
       def build_hash(xml, options)

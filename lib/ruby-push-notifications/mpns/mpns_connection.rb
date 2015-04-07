@@ -40,8 +40,7 @@ module RubyPushNotifications
         headers = build_headers(n.data[:type], n.data[:delay])
         body = n.as_mpns_xml
         responses = []
-        n.device_urls.each do |url|
-          url = URI.parse url
+        n.each_device do |url|
           http = Net::HTTP.new url.host, url.port
           if cert && url.scheme == 'https'
             http.use_ssl = true
@@ -51,9 +50,9 @@ module RubyPushNotifications
           response = http.post url.path, body, headers
           responses << {
             device_url: url.to_s,
-            body: response.body,
             headers: response.to_hash,
-            status_code: response.code.to_i
+            status_code: response.code.to_i,
+            message: response.message
           }
         end
         responses

@@ -28,7 +28,7 @@ module RubyPushNotifications
         it 'returns the response encapsulated in a Hash object' do
           expect(MPNSConnection.post toast_notification).to eq [
             { device_url: toast_notification.device_urls[0],
-              body: body,
+              message: 'OK',
               headers: headers,
               status_code: 200
             }
