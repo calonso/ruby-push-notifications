@@ -5,9 +5,9 @@ module RubyPushNotifications
 
       let(:device_urls) { %w(a b c) }
       let(:raw_notification) { build :mpns_notification }
-      let(:toast_data) { { title: 'Title', message: 'Hello MPNS World!', type: :toast } }
+      let(:toast_data) { { title: 'Title', message: 'Hello MPNS World!', type: 'toast' } }
       let(:toast_notification) { build :mpns_notification, device_urls: device_urls, data: toast_data }
-      let(:tile_data) { { count: 1, title: 'Hello MPNS World!', type: :tile } }
+      let(:tile_data) { { count: 1, title: 'Hello MPNS World!', type: 'tile' } }
       let(:tile_notification) { build :mpns_notification, device_urls: device_urls, data: tile_data }
 
       it 'builds the right mpns raw xml' do

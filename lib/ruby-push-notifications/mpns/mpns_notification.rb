@@ -31,10 +31,23 @@ module RubyPushNotifications
       #
       # @param [Array]. Array with the receiver's device urls.
       # @param [Hash]. Payload to send.
+      #   Toast :title => a bold message
+      #     :message => the small message
+      #     :param => a string parameter that is passed to the app
+      #   Tile :image => a new image for the tile
+      #     :count => a number to show on the tile
+      #     :title => the new title of the tile
+      #     :back_image => an image for the back of the tile
+      #     :back_title => a title on the back of the tile
+      #     :back_content => some content (text) for the back
+      #   Raw :message => the full XML message body
       def initialize(device_urls, data)
         @device_urls = device_urls
         @data = data
-        @data[:type] ||= :raw
+        @data[:type] ||= 'raw'
+
+        @data[:type] = @data[:type].to_sym
+        @data[:delay] = @data[:delay].to_sym if @data[:delay]
       end
 
 
