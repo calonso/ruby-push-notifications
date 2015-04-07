@@ -8,7 +8,7 @@ module RubyPushNotifications
     #
     class MPNSNotification
 
-      # @return [Array]. Array with the results from sending this notification.
+      # @return [MPNSResponse]. MPNSResponse with the results from sending this notification.
       attr_accessor :results
 
       # @return [Hash]. Payload to send.
@@ -22,10 +22,10 @@ module RubyPushNotifications
       #     :back_title => a title on the back of the tile
       #     :back_content => some content (text) for the back
       #   Raw :message => the full Hash message body
-      attr_accessor :data
+      attr_reader :data
 
       # @return [Array]. Array with the receiver's MPNS device URLs.
-      attr_accessor :device_urls
+      attr_reader :device_urls
 
       # Initializes the notification
       #
