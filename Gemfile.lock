@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     ruby-push-notifications (0.1.0)
+      builder (~> 3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -57,7 +58,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  builder
   bundler (~> 1.6)
   codeclimate-test-reporter
   factory_girl (~> 4.0)

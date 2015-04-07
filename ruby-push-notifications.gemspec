@@ -20,9 +20,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'builder', '~> 3.2'
+
   spec.add_development_dependency 'bundler', '~> 1.6'
   spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'factory_girl', '~> 4.0'
-  spec.add_development_dependency 'builder', '~> 3.2'
+  spec.add_development_dependency 'webmock', '~> 1.20'
 end
