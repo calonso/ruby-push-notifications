@@ -44,10 +44,7 @@ module RubyPushNotifications
       def initialize(device_urls, data)
         @device_urls = device_urls
         @data = data
-        @data[:type] ||= 'raw'
-
-        @data[:type] = @data[:type].to_sym
-        @data[:delay] = @data[:delay].to_sym if @data[:delay]
+        @data[:type] ||= :raw
       end
 
 

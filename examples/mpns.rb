@@ -10,7 +10,7 @@ device_urls = [
 ]
 
 # Notification with toast type
-notification = RubyPushNotifications::MPNS::MPNSNotification.new device_urls, { title: 'Title', message: 'Hello MPNS World!', type: 'toast' }
+notification = RubyPushNotifications::MPNS::MPNSNotification.new device_urls, { title: 'Title', message: 'Hello MPNS World!', type: :toast }
 
 pusher = RubyPushNotifications::MPNS::MPNSPusher.new
 pusher.push [notification]
