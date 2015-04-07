@@ -39,13 +39,13 @@ module RubyPushNotifications
       #
       # @param responses [Array]. Array of hash responses
       def parse_response(responses)
-        @success = count_sucess(responses)
-        @failed = count_failed(responses)
-        @results = responses.map { |result|
-          mpns_result_for result[:code],
-                          result[:device_url],
-                          result[:headers]
-        }
+        @success = responses.count { |response| response[:code] == 200 }
+        @failed = responses.count { |response| response[:code] != 200 }
+        @results = responses.map do |response|
+          mpns_result_for response[:code],
+                          response[:device_url],
+                          response[:headers]
+        end
       end
 
       # Factory method that, for each MPNS result object assigns a MPNSResult
@@ -74,30 +74,6 @@ module RubyPushNotifications
         else
           MPNSResultError.new device_url
         end
-      end
-
-      # Method that count sucess responses.
-      #
-      # @param responses [Hash]. MPNS responses hash
-      # @return [Integer]. Number of sucess responses.
-      def count_sucess(responses)
-        counter = 0
-        responses.each do |response|
-          counter += 1 if response[:code] == 200
-        end
-        counter
-      end
-
-      # Method that count failed responses.
-      #
-      # @param responses [Hash]. MPNS responses hash
-      # @return [Integer]. Number of failed responses.
-      def count_failed(responses)
-        counter = 0
-        responses.each do |response|
-          counter += 1 if response[:code] != 200
-        end
-        counter
       end
 
     end
