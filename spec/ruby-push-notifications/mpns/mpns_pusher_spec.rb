@@ -15,18 +15,18 @@ module RubyPushNotifications
         let(:toast_notification) { build :mpns_notification, device_urls: device_urls, data: toast_data }
         let(:tile_data) { { count: 1, title: 'Hello MPNS World!', type: :tile } }
         let(:tile_notification) { build :mpns_notification, device_urls: device_urls, data: tile_data }
-        let(:header_success) {
+        let(:headers) {
           {
             'x-notificationstatus' => ['Received'],
             'x-deviceconnectionstatus' => ['Connected'],
             'x-subscriptionstatus' => ['Active']
           }
         }
-        let(:response) { [ { device_url: 'http://s.notify.live.net/1', headers: header_success, code: 200 } ]}
+        let(:response) { [ { device_url: 'http://s.notify.live.net/1', headers: headers, code: 200 } ]}
 
         before do
           stub_request(:post, %r{s.notify.live.net}).
-            to_return status: [200, 'OK'], headers: header_success
+            to_return status: [200, 'OK'], headers: headers
         end
 
         it 'submits every notification' do

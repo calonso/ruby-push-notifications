@@ -7,28 +7,29 @@ module RubyPushNotifications
 
         let(:successful_messages) { 2 }
         let(:failed_messages) { 6 }
-        let(:header_success) {
+        let(:headers) {
           {
-            'X-NotificationStatus' => 'Received',
-            'X-DeviceConnectionStatus' => 'Connected',
-            'X-SubscriptionStatus' => 'Active'
+            'x-notificationstatus' => ['Received'],
+            'x-deviceconnectionstatus' => ['Connected'],
+            'x-subscriptionstatus' => ['Active']
           }
         }
 
         let(:responses) {
           [
-            { device_url: '1', headers: header_success, code: 200 },
-            { device_url: '2', headers: header_success, code: 200 },
+            { device_url: '1', headers: headers, code: 200 },
+            { device_url: '2', headers: headers, code: 200 },
             { device_url: '3', code: 400 },
             { device_url: '4', code: 401 },
-            { device_url: '5', headers: {}, code: 404 },
-            { device_url: '6', headers: {}, code: 406 },
-            { device_url: '7', headers: {}, code: 412 },
+            { device_url: '5', headers: headers, code: 404 },
+            { device_url: '6', headers: headers, code: 406 },
+            { device_url: '7', headers: headers, code: 412 },
             { device_url: '8', code: 503 }
           ]
         }
 
         let(:response) { MPNSResponse.new responses }
+        let(:result) { MPNSResultOK.new '1', headers }
 
         it 'parses the number of successfully processed notifications' do
           expect(response.success).to eq successful_messages
@@ -40,16 +41,23 @@ module RubyPushNotifications
 
         it 'parses the results' do
           expect(response.results).to eq [
-            MPNSResultOK.new('1', header_success),
-            MPNSResultOK.new('2', header_success),
+            MPNSResultOK.new('1', headers),
+            MPNSResultOK.new('2', headers),
             MalformedMPNSResultError.new('3'),
             MPNSAuthError.new('4'),
-            MPNSInvalidError.new('5', {}),
-            MPNSLimitError.new('6', {}),
-            MPNSPreConditionError.new('7', {}),
+            MPNSInvalidError.new('5', headers),
+            MPNSLimitError.new('6', headers),
+            MPNSPreConditionError.new('7', headers),
             MPNSInternalError.new('8')
           ]
         end
+
+        it 'parses headers to result attributes' do
+          expect(result.notification_status).to eq 'Received'
+          expect(result.device_connection_status).to eq 'Connected'
+          expect(result.subscription_status).to eq 'Active'
+        end
+
       end
     end
   end

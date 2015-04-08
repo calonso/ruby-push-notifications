@@ -6,7 +6,13 @@ module RubyPushNotifications
       describe '::post' do
 
         let(:body) { 'abc' }
-        let(:headers) { { 'content-length' => [3] } }
+        let(:headers) {
+          {
+            'x-notificationstatus' => ['Received'],
+            'x-deviceconnectionstatus' => ['Connected'],
+            'x-subscriptionstatus' => ['Active']
+          }
+        }
         let(:device_urls) { [generate(:mpns_device_url)] }
         let(:toast_data) { { title: 'Title', message: 'Hello MPNS World!', type: :toast } }
         let(:toast_notification) { build :mpns_notification, device_urls: device_urls, data: toast_data }
