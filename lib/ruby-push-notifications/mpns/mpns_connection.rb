@@ -48,7 +48,7 @@ module RubyPushNotifications
             http.ca_file = cert
           end
           response = http.post url.path, body, headers
-          responses << { device_url: url.to_s, headers: response.to_hash, code: response.code.to_i }
+          responses << { device_url: url.to_s, headers: response, code: response.code.to_i }
         end
         MPNSResponse.new responses
       end

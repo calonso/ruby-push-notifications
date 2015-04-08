@@ -9,9 +9,9 @@ module RubyPushNotifications
         let(:failed_messages) { 6 }
         let(:headers) {
           {
-            'x-notificationstatus' => ['Received'],
-            'x-deviceconnectionstatus' => ['Connected'],
-            'x-subscriptionstatus' => ['Active']
+            'X-NotificationStatus' => 'Received',
+            'X-DeviceConnectionStatus' => 'Connected',
+            'X-SubscriptionStatus' => 'Active'
           }
         }
 

@@ -24,9 +24,9 @@ module RubyPushNotifications
 
       def initialize(device_url, headers = nil)
         @device_url = device_url
-        @notification_status = headers['x-notificationstatus'][0]
-        @device_connection_status = headers['x-deviceconnectionstatus'][0]
-        @subscription_status = headers['x-subscriptionstatus'][0]
+        @notification_status = headers['X-NotificationStatus']
+        @device_connection_status = headers['X-DeviceConnectionStatus']
+        @subscription_status = headers['X-SubscriptionStatus']
       end
 
       def ==(other)
@@ -77,9 +77,9 @@ module RubyPushNotifications
 
       def initialize(device_url, headers)
         @device_url = device_url
-        @notification_status = headers['x-notificationstatus'][0]
-        @device_connection_status = headers['x-deviceconnectionstatus'][0]
-        @subscription_status = headers['x-subscriptionstatus'][0]
+        @notification_status = headers['X-NotificationStatus']
+        @device_connection_status = headers['X-DeviceConnectionStatus']
+        @subscription_status = headers['X-SubscriptionStatus']
       end
 
       def ==(other)
@@ -108,9 +108,9 @@ module RubyPushNotifications
 
       def initialize(device_url, headers)
         @device_url = device_url
-        @notification_status = headers['x-notificationstatus'][0]
-        @device_connection_status = headers['x-deviceconnectionstatus'][0]
-        @subscription_status = headers['x-subscriptionstatus'][0]
+        @notification_status = headers['X-NotificationStatus']
+        @device_connection_status = headers['X-DeviceConnectionStatus']
+        @subscription_status = headers['X-SubscriptionStatus']
       end
 
       def ==(other)
@@ -133,8 +133,8 @@ module RubyPushNotifications
 
       def initialize(device_url, headers)
         @device_url = device_url
-        @notification_status = headers['x-notificationstatus'][0]
-        @device_connection_status = headers['x-deviceconnectionstatus'][0]
+        @notification_status = headers['X-NotificationStatus']
+        @device_connection_status = headers['X-DeviceConnectionStatus']
       end
 
       def ==(other)
