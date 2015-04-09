@@ -7,6 +7,16 @@ module RubyPushNotifications
     class MPNSResult
       # @return [String]. Receiver MPNS device URL.
       attr_accessor :device_url
+
+      # @private X-NotificationStatus HTTP Header string
+      X_NOTIFICATION_STATUS  = 'X-NotificationStatus'
+
+      # @private X-DeviceConnectionStatus HTTP Header string
+      X_DEVICE_CONNECTION_STATUS  = 'X-DeviceConnectionStatus'
+
+      # @private X-SubscriptionStatus HTTP Header string
+      X_SUBSCRIPTION_STATUS  = 'X-SubscriptionStatus'
+
     end
 
     # Indicates that the notification was successfully sent to the corresponding
@@ -24,9 +34,9 @@ module RubyPushNotifications
 
       def initialize(device_url, headers = nil)
         @device_url = device_url
-        @notification_status = headers['X-NotificationStatus']
-        @device_connection_status = headers['X-DeviceConnectionStatus']
-        @subscription_status = headers['X-SubscriptionStatus']
+        @notification_status = headers[X_NOTIFICATION_STATUS]
+        @device_connection_status = headers[X_DEVICE_CONNECTION_STATUS]
+        @subscription_status = headers[X_SUBSCRIPTION_STATUS]
       end
 
       def ==(other)
@@ -77,9 +87,9 @@ module RubyPushNotifications
 
       def initialize(device_url, headers)
         @device_url = device_url
-        @notification_status = headers['X-NotificationStatus']
-        @device_connection_status = headers['X-DeviceConnectionStatus']
-        @subscription_status = headers['X-SubscriptionStatus']
+        @notification_status = headers[X_NOTIFICATION_STATUS]
+        @device_connection_status = headers[X_DEVICE_CONNECTION_STATUS]
+        @subscription_status = headers[X_SUBSCRIPTION_STATUS]
       end
 
       def ==(other)
@@ -108,9 +118,9 @@ module RubyPushNotifications
 
       def initialize(device_url, headers)
         @device_url = device_url
-        @notification_status = headers['X-NotificationStatus']
-        @device_connection_status = headers['X-DeviceConnectionStatus']
-        @subscription_status = headers['X-SubscriptionStatus']
+        @notification_status = headers[X_NOTIFICATION_STATUS]
+        @device_connection_status = headers[X_DEVICE_CONNECTION_STATUS]
+        @subscription_status = headers[X_SUBSCRIPTION_STATUS]
       end
 
       def ==(other)
@@ -133,8 +143,8 @@ module RubyPushNotifications
 
       def initialize(device_url, headers)
         @device_url = device_url
-        @notification_status = headers['X-NotificationStatus']
-        @device_connection_status = headers['X-DeviceConnectionStatus']
+        @notification_status = headers[X_NOTIFICATION_STATUS]
+        @device_connection_status = headers[X_DEVICE_CONNECTION_STATUS]
       end
 
       def ==(other)
