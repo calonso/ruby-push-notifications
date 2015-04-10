@@ -8,9 +8,9 @@ module RubyPushNotifications
         let(:body) { 'abc' }
         let(:headers) {
           {
-            'X-NotificationStatus' => 'Received',
-            'X-DeviceConnectionStatus' => 'Connected',
-            'X-SubscriptionStatus' => 'Active'
+            'x-notificationstatus' => 'Received',
+            'x-deviceconnectionstatus' => 'Connected',
+            'x-subscriptionstatus' => 'Active'
           }
         }
         let(:device_urls) { [generate(:mpns_device_url)] }

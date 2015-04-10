@@ -17,9 +17,9 @@ module RubyPushNotifications
         let(:tile_notification) { build :mpns_notification, device_urls: device_urls, data: tile_data }
         let(:headers) {
           {
-            'X-NotificationStatus' => 'Received',
-            'X-DeviceConnectionStatus' => 'Connected',
-            'X-SubscriptionStatus' => 'Active'
+            'x-notificationstatus' => 'Received',
+            'x-deviceconnectionstatus' => 'Connected',
+            'x-subscriptionstatus' => 'Active'
           }
         }
         let(:response) { [ { device_url: 'http://s.notify.live.net/1', headers: headers, code: 200 } ]}

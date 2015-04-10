@@ -9,13 +9,13 @@ module RubyPushNotifications
       attr_accessor :device_url
 
       # @private X-NotificationStatus HTTP Header string
-      X_NOTIFICATION_STATUS  = 'X-NotificationStatus'
+      X_NOTIFICATION_STATUS  = 'x-notificationstatus'
 
       # @private X-DeviceConnectionStatus HTTP Header string
-      X_DEVICE_CONNECTION_STATUS  = 'X-DeviceConnectionStatus'
+      X_DEVICE_CONNECTION_STATUS  = 'x-deviceconnectionstatus'
 
       # @private X-SubscriptionStatus HTTP Header string
-      X_SUBSCRIPTION_STATUS  = 'X-SubscriptionStatus'
+      X_SUBSCRIPTION_STATUS  = 'x-subscriptionstatus'
 
     end
 

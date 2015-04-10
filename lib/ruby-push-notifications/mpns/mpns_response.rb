@@ -53,7 +53,7 @@ module RubyPushNotifications
       #
       # @param code [Integer]. The HTTP status code received
       # @param device_url [String]. The receiver's MPNS device url.
-      # @param headers [Net::HTTPResponse]. The http response received.
+      # @param headers [Hash]. The HTTP headers received.
       # @return [MPNSResult]. Corresponding MPNSResult subclass
       def mpns_result_for(code, device_url, headers)
         case code

@@ -48,7 +48,7 @@ module RubyPushNotifications
             http.ca_file = cert
           end
           response = http.post url.path, body, headers
-          responses << { device_url: url.to_s, headers: response, code: response.code.to_i }
+          responses << { device_url: url.to_s, headers: extract_headers(response), code: response.code.to_i }
         end
         MPNSResponse.new responses
       end
@@ -66,6 +66,17 @@ module RubyPushNotifications
         headers[X_WINDOWSPHONE_TARGET] = WP_TARGETS[type] unless type == :raw
         headers
       end
+
+      # Extract headers from response
+      # @param response [Net::HTTPResponse]. HTTP response for request
+      #
+      # @return [Hash]. Hash with headers with case-insensitive keys and string values
+      def self.extract_headers(response)
+        headers = {}
+        response.each_header { |k, v| headers[k] = v }
+        headers
+      end
+
     end
   end
 end
