@@ -38,6 +38,7 @@ For completely detailed examples:
 
 1. [Apple iOS example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/apns.rb)
 2. [Google Android example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/gcm.rb)
+3. [Windows Phone example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/mpns.rb)
 
 ## Pending tasks
 
@@ -49,7 +50,9 @@ Feel free to contribute!!
 * Validate GCM notifications format and max size
 * Split GCM notifications in parts if more than 1000 destinations are given (currently raising exception)
 * Integrate with APNS Feedback service
-* Add other platforms (Windows Phone, Amazon Fire...)
+* Validate MPNS notifications format
+* Validate MPNS data
+* Add other platforms (Amazon Fire...)
 
 ## Contributing
 
