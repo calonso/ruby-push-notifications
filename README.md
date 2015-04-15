@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/calonso/ruby-push-notifications.svg)](https://travis-ci.org/calonso/ruby-push-notifications) [![Dependency Status](https://gemnasium.com/calonso/ruby-push-notifications.svg)](https://gemnasium.com/calonso/ruby-push-notifications) [![Code Climate](https://codeclimate.com/github/calonso/ruby-push-notifications/badges/gpa.svg)](https://codeclimate.com/github/calonso/ruby-push-notifications) [![Test Coverage](https://codeclimate.com/github/calonso/ruby-push-notifications/badges/coverage.svg)](https://codeclimate.com/github/calonso/ruby-push-notifications) [![Gem Version](https://badge.fury.io/rb/ruby-push-notifications.svg)](http://badge.fury.io/rb/ruby-push-notifications) [![Join the chat at https://gitter.im/calonso/ruby-push-notifications](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/calonso/ruby-push-notifications?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-###iOS and Android Push Notifications made easy!
+###iOS, Android and Windows Phone Push Notifications made easy!
 
 ## Features
 
