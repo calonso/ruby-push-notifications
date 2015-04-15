@@ -12,4 +12,12 @@ FactoryGirl.define do
 
     initialize_with { new registration_ids, data }
   end
+
+  factory :mpns_notification, class: 'RubyPushNotifications::MPNS::MPNSNotification' do
+    device_urls { [generate(:mpns_device_url)] }
+    data message: { value1: 'hello' }
+
+    initialize_with { new device_urls, data }
+  end
+
 end

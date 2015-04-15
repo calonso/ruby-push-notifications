@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     ruby-push-notifications (0.1.0)
+      builder (~> 3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -13,6 +14,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.8)
+    builder (3.2.2)
     codeclimate-test-reporter (0.4.7)
       simplecov (>= 0.7.1, < 1.0.0)
     crack (0.4.2)
