@@ -13,4 +13,7 @@ notification = RubyPushNotifications::APNS::APNSNotification.new tokens, { aps: 
 
 pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true)
 pusher.push [notification]
-p notification.results
+p 'Notification sending results:'
+p "Success: #{notification.success}, Failed: #{notification.failed}"
+p 'Details:'
+p notification.individual_results

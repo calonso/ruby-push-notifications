@@ -64,7 +64,7 @@ module RubyPushNotifications
         conn.close
 
         notifications.each do |notif|
-          notif.results = results.slice! 0, notif.count
+          notif.results = APNSResults.new(results.slice! 0, notif.count)
         end
       end
     end

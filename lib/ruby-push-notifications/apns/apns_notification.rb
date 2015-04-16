@@ -10,12 +10,15 @@ module RubyPushNotifications
     #
     # @author Carlos Alonso
     class APNSNotification
+      extend Forwardable
+
+      def_delegators :@results, :success, :failed, :individual_results
 
       # @private. 4 weeks in seconds
       WEEKS_4 = 2419200
 
-      # @return [Array]. Array with the results from sending this notification
-      attr_accessor :results
+      # @return [APNSResults] containing the results from sending this notification
+      attr_writer :results
 
       # Initializes the APNS Notification
       #
