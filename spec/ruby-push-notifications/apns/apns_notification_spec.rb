@@ -25,17 +25,12 @@ module RubyPushNotifications
       it 'validates the tokens'
 
       describe 'results management' do
-        let(:success_count) { 3 }
+        let(:success_count) { 2 }
         let(:failures_count) { 1 }
         let(:individual_results) {
-          [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE]
+          [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
         }
-        let(:results) {
-          double APNSResults,
-            success: success_count,
-            failed: failures_count,
-            individual_results: individual_results
-        }
+        let(:results) { APNSResults.new individual_results }
 
         before { notification.results = results }
 
