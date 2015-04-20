@@ -7,8 +7,11 @@ module RubyPushNotifications
     #
     # @author Carlos Alonso
     class GCMNotification
+      extend Forwardable
 
-      # @return [Array]. Array with the results from sending this notification
+      def_delegators :@results, :success, :failed, :individual_results
+
+      # @return [GCMResponse] with the results from sending this notification
       attr_accessor :results
 
       # Initializes the notification
