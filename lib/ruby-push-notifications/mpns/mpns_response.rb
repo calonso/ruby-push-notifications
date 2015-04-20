@@ -16,6 +16,7 @@ module RubyPushNotifications
       # @return [Array] Array of a MPNSResult for every receiver of the notification
       #   sent indicating the result of the operation.
       attr_reader :results
+      alias_method :individual_results, :results
 
       # Initializes the MPNSResponse and runs response parsing
       #

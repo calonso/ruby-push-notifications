@@ -38,6 +38,31 @@ module RubyPushNotifications
 
       it 'validates the data'
 
+      describe 'results management' do
+
+        let(:success_count) { 1 }
+        let(:failed_count) { 0 }
+        let(:device_url) { generate :mpns_device_url }
+        let(:individual_results) { [MPNSResultOK.new(device_url, {})] }
+        let(:results) {
+          MPNSResponse.new [ { code: 200, device_url: device_url, headers: {} } ]
+        }
+
+        before { raw_notification.results = results }
+
+        it 'gives the success count' do
+          expect(raw_notification.success).to eq success_count
+        end
+
+        it 'gives the failures count' do
+          expect(raw_notification.failed).to eq failed_count
+        end
+
+        it 'gives the individual results' do
+          expect(raw_notification.individual_results).to eq individual_results
+        end
+      end
+
     end
   end
 end
