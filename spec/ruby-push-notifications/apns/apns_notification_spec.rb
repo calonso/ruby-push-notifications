@@ -12,12 +12,12 @@ module RubyPushNotifications
         json = JSON.dump data
         expect do |b|
           notification.each_message notif_id, &b
-        end.to yield_successive_args apns_binary(json, device_tokens[0], notif_id), apns_binary(json, device_tokens[1], notif_id+1)
+        end.to yield_successive_args apns_binary(json, device_tokens[0], notif_id), apns_binary(json, device_tokens[1], notif_id + 1)
       end
 
       it 'caches the payload' do
         expect(JSON).to receive(:dump).with(data).once.and_return 'dummy string'
-        notification.each_message(notif_id) { }
+        notification.each_message(notif_id) {}
       end
 
       it 'validates the data'
@@ -27,9 +27,13 @@ module RubyPushNotifications
       it_behaves_like 'a proper results manager' do
         let(:success_count) { 2 }
         let(:failures_count) { 1 }
-        let(:individual_results) {
-          [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
-        }
+        let(:individual_results) do
+          [
+            NO_ERROR_STATUS_CODE,
+            PROCESSING_ERROR_STATUS_CODE,
+            NO_ERROR_STATUS_CODE
+          ]
+        end
         let(:results) { APNSResults.new individual_results }
       end
     end

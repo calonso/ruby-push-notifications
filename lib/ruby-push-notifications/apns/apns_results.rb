@@ -1,4 +1,3 @@
-
 module RubyPushNotifications
   module APNS
     # This class is responsible for holding and
