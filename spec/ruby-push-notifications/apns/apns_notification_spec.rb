@@ -24,27 +24,13 @@ module RubyPushNotifications
 
       it 'validates the tokens'
 
-      describe 'results management' do
+      it_behaves_like 'a proper results manager' do
         let(:success_count) { 2 }
         let(:failures_count) { 1 }
         let(:individual_results) {
           [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
         }
         let(:results) { APNSResults.new individual_results }
-
-        before { notification.results = results }
-
-        it 'gives the success count' do
-          expect(notification.success).to eq success_count
-        end
-
-        it 'gives the failures count' do
-          expect(notification.failed).to eq failures_count
-        end
-
-        it 'gives the individual results' do
-          expect(notification.individual_results).to eq individual_results
-        end
       end
     end
   end
