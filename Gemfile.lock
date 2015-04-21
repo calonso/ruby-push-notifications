@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby-push-notifications (0.2.2)
+    ruby-push-notifications (0.3.0)
       builder (~> 3.2)
 
 GEM

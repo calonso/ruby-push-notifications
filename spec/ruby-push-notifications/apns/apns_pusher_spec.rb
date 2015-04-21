@@ -36,10 +36,10 @@ module RubyPushNotifications
                 pusher.push [notification]
               end
 
-              it 'saves the results into the notification' do
-                expect do
-                  pusher.push [notification]
-                end.to change { notification.results }.from(nil).to [NO_ERROR_STATUS_CODE]
+              describe 'results' do
+                before { pusher.push [notification] }
+
+                include_examples 'right results', 1, 0, [NO_ERROR_STATUS_CODE]
               end
             end
 
@@ -55,10 +55,10 @@ module RubyPushNotifications
                 pusher.push [notification]
               end
 
-              it 'saves the error' do
-                expect do
-                  pusher.push [notification]
-                end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE]
+              describe 'results' do
+                before { pusher.push [notification] }
+
+                include_examples 'right results', 0, 1, [PROCESSING_ERROR_STATUS_CODE]
               end
             end
           end
@@ -82,10 +82,10 @@ module RubyPushNotifications
                 pusher.push [notification]
               end
 
-              it 'saves the results into the notification' do
-                expect do
-                  pusher.push [notification]
-                end.to change { notification.results }.from(nil).to [NO_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+              describe 'results' do
+                before { pusher.push [notification] }
+
+                include_examples 'right results', 2, 0, [NO_ERROR_STATUS_CODE] * 2
               end
             end
 
@@ -109,10 +109,10 @@ module RubyPushNotifications
                   pusher.push [notification]
                 end
 
-                it 'stores the error' do
-                  expect do
-                    pusher.push [notification]
-                  end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+                describe 'results' do
+                  before { pusher.push [notification] }
+
+                  include_examples 'right results', 1, 1, [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
                 end
               end
 
@@ -129,10 +129,10 @@ module RubyPushNotifications
                   pusher.push [notification]
                 end
 
-                it 'stores the error' do
-                  expect do
-                    pusher.push [notification]
-                  end.to change { notification.results }.from(nil).to [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
+                describe 'results' do
+                  before { pusher.push [notification] }
+
+                  include_examples 'right results', 1, 1, [PROCESSING_ERROR_STATUS_CODE, NO_ERROR_STATUS_CODE]
                 end
               end
 
@@ -149,10 +149,10 @@ module RubyPushNotifications
                   pusher.push [notification]
                 end
 
-                it 'stores the error' do
-                  expect do
-                    pusher.push [notification]
-                  end.to change { notification.results }.from(nil).to [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE]
+                describe 'results' do
+                  before { pusher.push [notification] }
+
+                  include_examples 'right results', 1, 1, [NO_ERROR_STATUS_CODE, PROCESSING_ERROR_STATUS_CODE]
                 end
               end
             end
@@ -180,9 +180,8 @@ module RubyPushNotifications
             end
 
             it 'saves results' do
-              expect do
-                pusher.push notifications
-              end.to change { notifications.map { |n| n.results } }.from([nil]*10).to([[NO_ERROR_STATUS_CODE]]*10)
+              pusher.push notifications
+              expect(notifications.map(&:individual_results)).to eq [[NO_ERROR_STATUS_CODE]] * 10
             end
           end
 
@@ -224,9 +223,8 @@ module RubyPushNotifications
               end
 
               it 'saves the statuses' do
-                expect do
-                  pusher.push notifications
-                end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
+                pusher.push notifications
+                expect(notifications.map(&:individual_results)).to eq [
                     [PROCESSING_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [MISSING_DEVICE_TOKEN_STATUS_CODE],
@@ -275,9 +273,8 @@ module RubyPushNotifications
               end
 
               it 'saves the statuses' do
-                expect do
-                  pusher.push notifications
-                end.to change { notifications.map { |n| n.results } }.from([nil]*10).to [
+                pusher.push notifications
+                expect(notifications.map(&:individual_results)).to eq [
                     [PROCESSING_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [MISSING_DEVICE_TOKEN_STATUS_CODE],

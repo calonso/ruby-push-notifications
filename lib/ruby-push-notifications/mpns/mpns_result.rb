@@ -32,7 +32,7 @@ module RubyPushNotifications
       # @return [String]. The subscription status.
       attr_accessor :subscription_status
 
-      def initialize(device_url, headers = nil)
+      def initialize(device_url, headers)
         @device_url = device_url
         @notification_status = headers[X_NOTIFICATION_STATUS]
         @device_connection_status = headers[X_DEVICE_CONNECTION_STATUS]

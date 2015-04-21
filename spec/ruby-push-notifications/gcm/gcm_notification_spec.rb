@@ -19,6 +19,19 @@ module RubyPushNotifications
       # According to https://developer.android.com/google/gcm/server-ref.html#table1
       it 'validates the data'
 
+      it_behaves_like 'a proper results manager' do
+        let(:success_count) { 2 }
+        let(:failures_count) { 1 }
+        let(:canonical_id) { 'abcd' }
+        let(:individual_results) { [GCMCanonicalIDResult.new(canonical_id)] }
+        let(:results) do
+          GCMResponse.new 200, JSON.dump(
+            success: success_count, failure: failures_count, results: [
+              registration_id: canonical_id
+            ]
+            )
+        end
+      end
     end
   end
 end

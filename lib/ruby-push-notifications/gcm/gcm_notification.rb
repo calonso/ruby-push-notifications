@@ -7,9 +7,7 @@ module RubyPushNotifications
     #
     # @author Carlos Alonso
     class GCMNotification
-
-      # @return [Array]. Array with the results from sending this notification
-      attr_accessor :results
+      include RubyPushNotifications::NotificationResultsManager
 
       # Initializes the notification
       #

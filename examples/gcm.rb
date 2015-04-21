@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bundle exec ruby
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
@@ -13,4 +13,7 @@ notification = RubyPushNotifications::GCM::GCMNotification.new registration_ids,
 
 pusher = RubyPushNotifications::GCM::GCMPusher.new "Your app's GCM key"
 pusher.push [notification]
-p notification.results
+p 'Notification sending results:'
+p "Success: #{notification.success}, Failed: #{notification.failed}"
+p 'Details:'
+p notification.individual_results
