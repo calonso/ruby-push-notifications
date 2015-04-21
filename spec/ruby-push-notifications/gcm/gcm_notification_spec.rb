@@ -24,13 +24,13 @@ module RubyPushNotifications
         let(:failures_count) { 1 }
         let(:canonical_id) { 'abcd' }
         let(:individual_results) { [GCMCanonicalIDResult.new(canonical_id)] }
-        let(:results) {
+        let(:results) do
           GCMResponse.new 200, JSON.dump(
             success: success_count, failure: failures_count, results: [
               registration_id: canonical_id
             ]
             )
-        }
+        end
       end
     end
   end

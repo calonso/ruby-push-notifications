@@ -85,7 +85,7 @@ module RubyPushNotifications
               describe 'results' do
                 before { pusher.push [notification] }
 
-                include_examples 'right results', 2, 0, [NO_ERROR_STATUS_CODE]*2
+                include_examples 'right results', 2, 0, [NO_ERROR_STATUS_CODE] * 2
               end
             end
 
@@ -181,7 +181,7 @@ module RubyPushNotifications
 
             it 'saves results' do
               pusher.push notifications
-              expect(notifications.map { |n| n.individual_results }).to eq [[NO_ERROR_STATUS_CODE]]*10
+              expect(notifications.map(&:individual_results).to eq [[NO_ERROR_STATUS_CODE]] * 10
             end
           end
 
@@ -224,7 +224,7 @@ module RubyPushNotifications
 
               it 'saves the statuses' do
                 pusher.push notifications
-                expect(notifications.map { |n| n.individual_results }).to eq [
+                expect(notifications.map(&:individual_results).to eq [
                     [PROCESSING_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [MISSING_DEVICE_TOKEN_STATUS_CODE],
@@ -274,7 +274,7 @@ module RubyPushNotifications
 
               it 'saves the statuses' do
                 pusher.push notifications
-                expect(notifications.map { |n| n.individual_results }).to eq [
+                expect(notifications.map(&:individual_results).to eq [
                     [PROCESSING_ERROR_STATUS_CODE],
                     [NO_ERROR_STATUS_CODE],
                     [MISSING_DEVICE_TOKEN_STATUS_CODE],

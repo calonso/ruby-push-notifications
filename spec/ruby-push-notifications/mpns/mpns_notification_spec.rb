@@ -44,9 +44,9 @@ module RubyPushNotifications
         let(:failures_count) { 0 }
         let(:device_url) { generate :mpns_device_url }
         let(:individual_results) { [MPNSResultOK.new(device_url, {})] }
-        let(:results) {
-          MPNSResponse.new [ { code: 200, device_url: device_url, headers: {} } ]
-        }
+        let(:results) do
+          MPNSResponse.new [{ code: 200, device_url: device_url, headers: {} }]
+        end
       end
     end
   end
