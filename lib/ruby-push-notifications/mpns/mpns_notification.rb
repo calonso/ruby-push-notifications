@@ -7,12 +7,7 @@ module RubyPushNotifications
     # (http://msdn.microsoft.com/en-us/library/windowsphone/develop/hh202945)
     #
     class MPNSNotification
-      extend Forwardable
-
-      def_delegators :@results, :success, :failed, :individual_results
-
-      # @return [MPNSResponse]. MPNSResponse with the results from sending this notification.
-      attr_accessor :results
+      include RubyPushNotifications::NotificationResultsManager
 
       # @return [Hash]. Payload to send.
       #   Toast :title => a bold message

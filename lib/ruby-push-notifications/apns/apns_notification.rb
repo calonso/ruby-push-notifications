@@ -10,15 +10,10 @@ module RubyPushNotifications
     #
     # @author Carlos Alonso
     class APNSNotification
-      extend Forwardable
-
-      def_delegators :@results, :success, :failed, :individual_results
+      include RubyPushNotifications::NotificationResultsManager
 
       # @private. 4 weeks in seconds
       WEEKS_4 = 2419200
-
-      # @return [APNSResults] containing the results from sending this notification
-      attr_writer :results
 
       # Initializes the APNS Notification
       #
