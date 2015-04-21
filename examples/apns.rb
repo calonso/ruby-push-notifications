@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bundle exec ruby
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
