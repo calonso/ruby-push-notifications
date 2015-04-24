@@ -15,7 +15,7 @@ module RubyPushNotifications
 
       # @param certificate [String]. The PEM encoded APNS certificate.
       # @param sandbox [Boolean]. Whether the certificate is an APNS sandbox or not.
-      def initialize(certificate, sandbox, password=nil)
+      def initialize(certificate, sandbox, password = nil)
         @certificate = certificate
         @pass = password
         @sandbox = sandbox
