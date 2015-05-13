@@ -67,7 +67,7 @@ module RubyPushNotifications
       # @return [String]. Binary representation of the notification's payload.
       def payload
         @encoded_payload ||= -> {
-            json = JSON.dump(@data).force_encoding 'ascii-8bit'
+            json = (@data.respond_to?(:to_json) ? @data.to_json : JSON.dump(@data)).force_encoding 'ascii-8bit'
             [2, json.bytesize, json].pack 'cna*'
           }.call
       end
