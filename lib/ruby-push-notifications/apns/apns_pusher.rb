@@ -50,11 +50,18 @@ module RubyPushNotifications
             rs, = IO.select([conn], [conn])
           end
           if rs && rs.any?
-            err = rs[0].read(6).unpack 'ccN'
-            results.slice! err[2]..-1
-            results << err[1]
-            i = err[2]
-            conn = APNSConnection.open @certificate, @sandbox
+            packed = rs[0].read 6
+            if packed.nil? && i == 0
+              # The connection wasn't properly open
+              # Probably because of wrong certificate/sandbox? combination
+              results << UNKNOWN_ERROR_STATUS_CODE
+            else
+              err = packed.unpack 'ccN'
+              results.slice! err[2]..-1
+              results << err[1]
+              i = err[2]
+              conn = APNSConnection.open @certificate, @sandbox
+            end
           else
             results << NO_ERROR_STATUS_CODE
           end
