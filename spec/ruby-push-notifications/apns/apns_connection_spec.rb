@@ -20,7 +20,13 @@ module RubyPushNotifications
         end
 
         it 'returns an instance of APNSConnection' do
-          expect(APNSConnection.open cert, true).to be_a APNSConnection
+          expect(APNSConnection.open(cert, true)).to be_a APNSConnection
+        end
+
+        it 'sets the password for pem file' do
+          expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, an_instance_of(OpenSSL::SSL::SSLContext)).and_return ssl_socket
+          expect(OpenSSL::PKey::RSA).to receive(:new).with(cert, 'password')
+          expect(APNSConnection.open(cert, true, 'password')).to be_a APNSConnection
         end
       end
 

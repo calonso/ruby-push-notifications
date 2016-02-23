@@ -17,6 +17,7 @@ module RubyPushNotifications
 
       it 'caches the payload' do
         expect(JSON).to receive(:dump).with(data).once.and_return 'dummy string'
+        allow(data).to receive(:respond_to?).with(:to_json).and_return(false)
         notification.each_message(notif_id) {}
       end
 

@@ -8,10 +8,11 @@ tokens = [
   'First token here',
   'Second token here'
 ]
+password = nil # optional password for .pem file
 
 notification = RubyPushNotifications::APNS::APNSNotification.new tokens, { aps: { alert: 'Hello APNS World!', sound: 'true', badge: 1 } }
 
-pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true)
+pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password) # enter the password if present
 pusher.push [notification]
 p 'Notification sending results:'
 p "Success: #{notification.success}, Failed: #{notification.failed}"

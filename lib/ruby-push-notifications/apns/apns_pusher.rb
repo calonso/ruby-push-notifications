@@ -15,8 +15,9 @@ module RubyPushNotifications
 
       # @param certificate [String]. The PEM encoded APNS certificate.
       # @param sandbox [Boolean]. Whether the certificate is an APNS sandbox or not.
-      def initialize(certificate, sandbox)
+      def initialize(certificate, sandbox, password = nil)
         @certificate = certificate
+        @pass = password
         @sandbox = sandbox
       end
 
@@ -30,7 +31,7 @@ module RubyPushNotifications
       #
       # @param notifications [Array]. All the APNSNotifications to be sent.
       def push(notifications)
-        conn = APNSConnection.open @certificate, @sandbox
+        conn = APNSConnection.open @certificate, @sandbox, @pass
 
         binaries = notifications.each_with_object([]) do |notif, binaries|
           notif.each_message(binaries.count) do |msg|
@@ -60,7 +61,7 @@ module RubyPushNotifications
               results.slice! err[2]..-1
               results << err[1]
               i = err[2]
-              conn = APNSConnection.open @certificate, @sandbox
+              conn = APNSConnection.open @certificate, @sandbox, @pass
             end
           else
             results << NO_ERROR_STATUS_CODE
