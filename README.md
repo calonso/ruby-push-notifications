@@ -64,10 +64,14 @@ Feel free to contribute!!
 
 ## Troubleshooting
 
-**Don't forget to change sandbox mode to false when using Apple's APNS on PRODUCTION**
+**If you see "255 Unknown Error" error code**
 
-If you don't change to false you'll get errors about
-1. when you send only one token you'll get "255 UNKNOWN ERROR"
-2. when you send more tokens you'll get  "NoMethodError: undefined method `unpack' for nil:NilClass"
+This error code is assigned when the connection to push notification server wasn't successful
+<a href="https://github.com/calonso/ruby-push-notifications/blob/master/lib/ruby-push-notifications/apns/apns_pusher.rb#L56-L58">255 UNKnown Error code</a>
 
-for more information please at <a href="https://github.com/calonso/ruby-push-notifications/issues/9/#issuecomment-191725825">issue #9 </a>
+Checking your connection configuration for example with APNS connection.
+When your pem file and token are development make sure you configure the pusher for sandbox mode
+``` RubyPushNotifications::APNS::APNSPusher.new('the certificate', true)) ```
+
+or when your pem file and token are production you should configure the pusher for production mode (Set the sandbox mode to false when creating your pusher)
+``` RubyPushNotifications::APNS::APNSPusher.new('the certificate', false)) ```
