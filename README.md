@@ -61,3 +61,13 @@ Feel free to contribute!!
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## Troubleshooting
+
+**Don't forget to change sandbox mode to false when using Apple's APNS on PRODUCTION**
+
+If you don't change to false you'll get errors about
+1. when you send only one token you'll get "255 UNKNOWN ERROR"
+2. when you send more tokens you'll get  "NoMethodError: undefined method `unpack' for nil:NilClass"
+
+for more information please at <a href="https://github.com/calonso/ruby-push-notifications/issues/9/#issuecomment-191725825">issue #9 </a>
