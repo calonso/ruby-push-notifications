@@ -61,3 +61,17 @@ Feel free to contribute!!
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## Troubleshooting
+
+**If you see "255 Unknown Error" error code**
+
+This error code is assigned when the connection to push notification server wasn't successful
+<a href="https://github.com/calonso/ruby-push-notifications/blob/master/lib/ruby-push-notifications/apns/apns_pusher.rb#L56-L58">255 UNKnown Error code</a>
+
+Checking your connection configuration for example with APNS connection.
+When your pem file and token are development make sure you configure the pusher for sandbox mode
+``` RubyPushNotifications::APNS::APNSPusher.new('the certificate', true)) ```
+
+or when your pem file and token are production you should configure the pusher for production mode (Set the sandbox mode to false when creating your pusher)
+``` RubyPushNotifications::APNS::APNSPusher.new('the certificate', false)) ```
