@@ -14,7 +14,7 @@ notification = RubyPushNotifications::APNS::APNSNotification.new tokens, { aps: 
 
 pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password) # enter the password if present
 # Connect timeout defaults to 30s
-# pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password, connect_timeout: { 20 })
+# pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password, { connect_timeout: 20 })
 
 pusher.push [notification]
 p 'Notification sending results:'

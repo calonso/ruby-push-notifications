@@ -33,8 +33,10 @@ module RubyPushNotifications
       # submit the given notifications.
       #
       # @param n [MPNSNotification]. The notification object to POST
-      # @param optional cert [String]. Contents of the PEM encoded certificate
-      # @param optional options [Hash]. Options for the HTTP connection.
+      # @param cert [String] optional. Contents of the PEM encoded certificate.
+      # @param options [Hash] optional. Options for GCMPusher. Currently supports:
+      #   * open_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
+      #   * read_timeout [Integer]: Number of seconds to wait for one block to be read. Defaults to 30.
       # @return [Array]. The response of post
       # (http://msdn.microsoft.com/pt-br/library/windows/apps/ff941099)
       def self.post(n, cert = nil, options = {})

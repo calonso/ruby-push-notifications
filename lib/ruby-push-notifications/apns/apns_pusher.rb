@@ -15,7 +15,8 @@ module RubyPushNotifications
 
       # @param certificate [String]. The PEM encoded APNS certificate.
       # @param sandbox [Boolean]. Whether the certificate is an APNS sandbox or not.
-      # @param optional options [Hash]. Options for the TCP socket.
+      # @param options [Hash] optional. Options for APNSPusher. Currently supports:
+      #   * connect_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
       def initialize(certificate, sandbox, password = nil, options = {})
         @certificate = certificate
         @pass = password
