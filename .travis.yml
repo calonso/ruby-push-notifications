@@ -3,7 +3,6 @@ rvm:
   - "2.2.0"
   - "2.1.5"
   - "2.0.0"
-  - "1.9.3"
 env: CODECLIMATE_REPO_TOKEN=efdb12c380287a25b2b26362aa710a9b59020122cbe4edecf0d353bf50e0046a
 notifications:
   webhooks:
