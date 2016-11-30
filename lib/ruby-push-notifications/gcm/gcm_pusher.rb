@@ -11,8 +11,10 @@ module RubyPushNotifications
       #
       # @param key [String]. GCM sender id to use
       #   ((https://developer.android.com/google/gcm/gcm.html#senderid))
-      def initialize(key)
+      # @param optional options [Hash]. Options for the HTTP connection.
+      def initialize(key, options = {})
         @key = key
+        @options = options
       end
 
       # Actually pushes the given notifications.
@@ -22,7 +24,7 @@ module RubyPushNotifications
       # @param notifications [Array]. Array of GCMNotification to send.
       def push(notifications)
         notifications.each do |notif|
-          notif.results = GCMConnection.post notif.as_gcm_json, @key
+          notif.results = GCMConnection.post notif.as_gcm_json, @key, @options
         end
       end
     end

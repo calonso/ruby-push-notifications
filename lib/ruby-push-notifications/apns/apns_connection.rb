@@ -26,14 +26,16 @@ module RubyPushNotifications
       #
       # @param cert [String]. Contents of the PEM encoded certificate
       # @param sandbox [Boolean]. Whether to use the sandbox environment or not.
+      # @param optional pass [String]. Passphrase for the certificate.
+      # @param optional options [Hash]. Options for the TCP socket
       # @return [APNSConnection]. The recently stablished connection.
-      def self.open(cert, sandbox, pass = nil)
+      def self.open(cert, sandbox, pass = nil, options = {})
         ctx = OpenSSL::SSL::SSLContext.new
         ctx.key = OpenSSL::PKey::RSA.new cert, pass
         ctx.cert = OpenSSL::X509::Certificate.new cert
 
         h = host sandbox
-        socket = TCPSocket.new h, APNS_PORT
+        socket = Socket.tcp h, APNS_PORT, nil, nil, connect_timeout: options.fetch(:connect_timeout, 30)
         ssl = OpenSSL::SSL::SSLSocket.new socket, ctx
         ssl.connect
 

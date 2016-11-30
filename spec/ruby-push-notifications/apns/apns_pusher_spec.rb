@@ -200,7 +200,7 @@ module RubyPushNotifications
                 allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil).and_return connection, connection2, connection3, connection4
               end
 
-              it 'repones the connection' do
+              it 'reopens the connection' do
                 (0..2).each do |i|
                   expect(connection).to receive(:write).with(apns_binary(data, tokens[i], i)).once
                 end
