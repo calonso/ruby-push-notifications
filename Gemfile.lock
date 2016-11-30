@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby-push-notifications (0.4.0)
+    ruby-push-notifications (0.5.0)
       builder (~> 3.0)
 
 GEM
@@ -66,4 +66,4 @@ DEPENDENCIES
   webmock (~> 1.20)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
