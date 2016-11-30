@@ -23,7 +23,7 @@ module RubyPushNotifications
       # @param notifications [Array]. Array of MPNSNotification to send.
       def push(notifications)
         notifications.each do |notif|
-          notif.results = MPNSConnection.post notif, @certificate, options
+          notif.results = MPNSConnection.post notif, @certificate, @options
         end
       end
     end

@@ -9,7 +9,7 @@ module RubyPushNotifications
       let(:data) { { a: 1 } }
 
       before do
-        allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil).and_return connection
+        allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil, {}).and_return connection
       end
 
       describe '#push' do
@@ -93,7 +93,7 @@ module RubyPushNotifications
               let(:connection2) { instance_double(APNSConnection).as_null_object }
 
               before do
-                allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil).and_return connection, connection2
+                allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil, {}).and_return connection, connection2
               end
 
               context 'failing first' do
@@ -197,7 +197,7 @@ module RubyPushNotifications
                 allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack('ccN')
                 allow(connection2).to receive(:read).with(6).and_return [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 2].pack('ccN')
                 allow(connection3).to receive(:read).with(6).and_return [8, INVALID_TOPIC_SIZE_STATUS_CODE, 9].pack('ccN')
-                allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil).and_return connection, connection2, connection3, connection4
+                allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil, {}).and_return connection, connection2, connection3, connection4
               end
 
               it 'reopens the connection' do
@@ -249,7 +249,7 @@ module RubyPushNotifications
                 allow(connection).to receive(:read).with(6).and_return [8, PROCESSING_ERROR_STATUS_CODE, 0].pack('ccN')
                 allow(connection2).to receive(:read).with(6).and_return [8, MISSING_DEVICE_TOKEN_STATUS_CODE, 2].pack('ccN')
                 allow(connection3).to receive(:read).with(6).and_return [8, INVALID_TOPIC_SIZE_STATUS_CODE, 9].pack('ccN')
-                allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil).and_return connection, connection2, connection3, connection4
+                allow(APNSConnection).to receive(:open).with(certificate, sandbox, nil, {}).and_return connection, connection2, connection3, connection4
               end
 
               it 'repones the connection' do

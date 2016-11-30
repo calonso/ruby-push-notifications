@@ -63,7 +63,7 @@ module RubyPushNotifications
               results.slice! err[2]..-1
               results << err[1]
               i = err[2]
-              conn = APNSConnection.open @certificate, @sandbox, @pass
+              conn = APNSConnection.open @certificate, @sandbox, @pass, @options
             end
           else
             results << NO_ERROR_STATUS_CODE
