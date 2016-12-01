@@ -75,3 +75,7 @@ When your pem file and token are development make sure you configure the pusher 
 
 or when your pem file and token are production you should configure the pusher for production mode (Set the sandbox mode to false when creating your pusher)
 ``` RubyPushNotifications::APNS::APNSPusher.new('the certificate', false)) ```
+
+## Changelog
+
+Refer to the [CHANGELOG.md](https://github.com/calonso/ruby-push-notifications/blob/master/CHANGELOG.md) file for detailed changes across versions.
