@@ -13,6 +13,8 @@ device_urls = [
 notification = RubyPushNotifications::MPNS::MPNSNotification.new device_urls, { title: 'Title', message: 'Hello MPNS World!', type: :toast }
 
 pusher = RubyPushNotifications::MPNS::MPNSPusher.new
+# Open and read timeouts default to 30s
+# pusher = RubyPushNotifications::MPNS::MPNSPusher.new optional_certificate, { open_timeout: 10, read_timeout: 10 }
 pusher.push [notification]
 p 'Notification sending results:'
 p "Success: #{notification.success}, Failed: #{notification.failed}"

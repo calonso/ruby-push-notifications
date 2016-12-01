@@ -27,8 +27,11 @@ module RubyPushNotifications
       # @param notification [String]. The text to POST
       # @param key [String]. The GCM sender id to use
       #    (https://developer.android.com/google/gcm/gcm.html#senderid)
+      # @param options [Hash] optional. Options for #post. Currently supports:
+      #   * open_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
+      #   * read_timeout [Integer]: Number of seconds to wait for one block to be read. Defaults to 30.
       # @return [GCMResponse]. The GCMResponse that encapsulates the received response
-      def self.post(notification, key)
+      def self.post(notification, key, options = {})
         headers = {
             CONTENT_TYPE_HEADER => JSON_CONTENT_TYPE,
             AUTHORIZATION_HEADER => "key=#{key}"
@@ -38,6 +41,8 @@ module RubyPushNotifications
         http = Net::HTTP.new url.host, url.port
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        http.open_timeout = options.fetch(:open_timeout, 30)
+        http.read_timeout = options.fetch(:read_timeout, 30)
 
         response = http.post url.path, notification, headers
 

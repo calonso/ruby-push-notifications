@@ -15,10 +15,13 @@ module RubyPushNotifications
 
       # @param certificate [String]. The PEM encoded APNS certificate.
       # @param sandbox [Boolean]. Whether the certificate is an APNS sandbox or not.
-      def initialize(certificate, sandbox, password = nil)
+      # @param options [Hash] optional. Options for APNSPusher. Currently supports:
+      #   * connect_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
+      def initialize(certificate, sandbox, password = nil, options = {})
         @certificate = certificate
         @pass = password
         @sandbox = sandbox
+        @options = options
       end
 
       # Pushes the notifications.
@@ -31,7 +34,7 @@ module RubyPushNotifications
       #
       # @param notifications [Array]. All the APNSNotifications to be sent.
       def push(notifications)
-        conn = APNSConnection.open @certificate, @sandbox, @pass
+        conn = APNSConnection.open @certificate, @sandbox, @pass, @options
 
         binaries = notifications.each_with_object([]) do |notif, binaries|
           notif.each_message(binaries.count) do |msg|
@@ -61,7 +64,7 @@ module RubyPushNotifications
               results.slice! err[2]..-1
               results << err[1]
               i = err[2]
-              conn = APNSConnection.open @certificate, @sandbox, @pass
+              conn = APNSConnection.open @certificate, @sandbox, @pass, @options
             end
           else
             results << NO_ERROR_STATUS_CODE

@@ -11,8 +11,12 @@ module RubyPushNotifications
       #
       # @param key [String]. GCM sender id to use
       #   ((https://developer.android.com/google/gcm/gcm.html#senderid))
-      def initialize(key)
+      # @param options [Hash] optional. Options for GCMPusher. Currently supports:
+      #   * open_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
+      #   * read_timeout [Integer]: Number of seconds to wait for one block to be read. Defaults to 30.
+      def initialize(key, options = {})
         @key = key
+        @options = options
       end
 
       # Actually pushes the given notifications.
@@ -22,7 +26,7 @@ module RubyPushNotifications
       # @param notifications [Array]. Array of GCMNotification to send.
       def push(notifications)
         notifications.each do |notif|
-          notif.results = GCMConnection.post notif.as_gcm_json, @key
+          notif.results = GCMConnection.post notif.as_gcm_json, @key, @options
         end
       end
     end

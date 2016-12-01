@@ -33,15 +33,20 @@ module RubyPushNotifications
       # submit the given notifications.
       #
       # @param n [MPNSNotification]. The notification object to POST
-      # @param optional cert [String]. Contents of the PEM encoded certificate
+      # @param cert [String] optional. Contents of the PEM encoded certificate.
+      # @param options [Hash] optional. Options for GCMPusher. Currently supports:
+      #   * open_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
+      #   * read_timeout [Integer]: Number of seconds to wait for one block to be read. Defaults to 30.
       # @return [Array]. The response of post
       # (http://msdn.microsoft.com/pt-br/library/windows/apps/ff941099)
-      def self.post(n, cert = nil)
+      def self.post(n, cert = nil, options = {})
         headers = build_headers(n.data[:type], n.data[:delay])
         body = n.as_mpns_xml
         responses = []
         n.each_device do |url|
           http = Net::HTTP.new url.host, url.port
+          http.open_timeout = options.fetch(:open_timeout, 30)
+          http.read_timeout = options.fetch(:read_timeout, 30)
           if cert && url.scheme == 'https'
             http.use_ssl = true
             http.verify_mode = OpenSSL::SSL::VERIFY_PEER
