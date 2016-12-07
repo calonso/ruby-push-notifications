@@ -26,7 +26,7 @@ module RubyPushNotifications
       #
       # @param notifications [Array]. Array of GCMNotification to send.
       def push(notifications)
-        notifications.each_slice(options[:slice_quantity] || 500).with_index do |notifications_slice|
+        notifications.each_slice(@options[:slice_quantity] || 500).with_index do |notifications_slice|
           notifications_slice.each do |notif|
             notif.results = GCMConnection.post notif.as_gcm_json, @key, @options
           end
