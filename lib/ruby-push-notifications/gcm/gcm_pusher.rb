@@ -14,6 +14,7 @@ module RubyPushNotifications
       # @param options [Hash] optional. Options for GCMPusher. Currently supports:
       #   * open_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
       #   * read_timeout [Integer]: Number of seconds to wait for one block to be read. Defaults to 30.
+      #   * slice_quantity [Integer]: Number of notifications to send to avoid hard limits. Defaults to 500.
       def initialize(key, options = {})
         @key = key
         @options = options
@@ -25,8 +26,10 @@ module RubyPushNotifications
       #
       # @param notifications [Array]. Array of GCMNotification to send.
       def push(notifications)
-        notifications.each do |notif|
-          notif.results = GCMConnection.post notif.as_gcm_json, @key, @options
+        notifications.each_slice(options[:slice_quantity] || 500).with_index do |notifications_slice|
+          notifications_slice.each do |notif|
+            notif.results = GCMConnection.post notif.as_gcm_json, @key, @options
+          end
         end
       end
     end
