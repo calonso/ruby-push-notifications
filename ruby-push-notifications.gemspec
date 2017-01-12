@@ -1,11 +1,7 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ruby-push-notifications/version'
-
 Gem::Specification.new do |spec|
   spec.name          = "ruby-push-notifications"
-  spec.version       = RubyPushNotifications::VERSION
+  spec.version       = "1.1.0"
   spec.authors       = ['Carlos Alonso']
   spec.email         = ['info@mrcalonso.com']
   spec.summary       = %q{iOS, Android and Windows Phone Push Notifications made easy!}

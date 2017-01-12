@@ -1,4 +1,4 @@
-require 'ruby-push-notifications/version'
+require 'forwardable'
 require 'ruby-push-notifications/notification_results_manager'
 require 'ruby-push-notifications/apns'
 require 'ruby-push-notifications/gcm'
