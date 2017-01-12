@@ -1,7 +1,7 @@
 # coding: utf-8
 Gem::Specification.new do |spec|
   spec.name          = "ruby-push-notifications"
-  spec.version       = "1.1.0"
+  spec.version       = "1.0.1"
   spec.authors       = ['Carlos Alonso']
   spec.email         = ['info@mrcalonso.com']
   spec.summary       = %q{iOS, Android and Windows Phone Push Notifications made easy!}
