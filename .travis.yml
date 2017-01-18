@@ -1,10 +1,14 @@
 language: ruby
 rvm:
-  - "2.4.0"
-  - "2.3.3"
-  - "2.2.6"
-  - "2.1.10"
-  - "2.0.0"
+  - 2.4.0
+  - 2.3.3
+  - 2.2.6
+matrix:
+  include:
+  - rvm: "2.1.10"
+    gemfile: gemfiles/Gemfile-legacy
+  - rvm: "2.0.0"
+    gemfile: gemfiles/Gemfile-legacy
 env: CODECLIMATE_REPO_TOKEN=efdb12c380287a25b2b26362aa710a9b59020122cbe4edecf0d353bf50e0046a
 notifications:
   webhooks:
