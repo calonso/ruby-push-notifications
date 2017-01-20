@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unrealeased] - [unrealease date]
 
+## 1.0.1 - 2017-01-12
+- **Fixed**: Loading issue when `'forwardable'` wasn't previously required.
+- **Removed**: Version file
+
 ## 1.0.0 - 2016-12-01
 - **Added**: Configurable timeouts for connecting external services.
 - **Removed**: Ruby 1.9.3 support.

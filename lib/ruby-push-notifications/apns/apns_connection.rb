@@ -1,7 +1,5 @@
-
 require 'socket'
 require 'openssl'
-require 'forwardable'
 
 module RubyPushNotifications
   module APNS
