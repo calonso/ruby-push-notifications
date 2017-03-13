@@ -16,8 +16,8 @@ pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/ap
 # Connect timeout defaults to 30s
 # pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password, { connect_timeout: 20 })
 
-# Manually set APNS URL (e.g. useful for load testing)
-# pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password, { apns_url: "gateway.push.example.com" })
+# Manually set APNS environment (e.g. useful for load testing)
+# pusher = RubyPushNotifications::APNS::APNSPusher.new(File.read('/path/to/your/apps/certificate.pem'), true, password, { apns_host: "gateway.push.example.com" })
 
 pusher.push [notification]
 p 'Notification sending results:'

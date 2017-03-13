@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unrealeased] - [unrealease date]
 - **Added**: Option (`gcm_url`) to set custom GCM endpoint (Android)
-- **Added**: Option (`apns_url`) to set custom APNS endpoint (iOS)
+- **Added**: Option (`apns_host`) to set custom APNS environment (iOS)
 
 ## 1.0.1 - 2017-01-12
 - **Fixed**: Loading issue when `'forwardable'` wasn't previously required.
