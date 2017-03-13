@@ -14,30 +14,26 @@ module RubyPushNotifications
             to_return status: [200, 'OK'], body: response
         end
 
-        context 'without optional params' do
-          it 'runs the right request' do
-            GCMConnection.post body, key
+        it 'runs the right request' do
+          GCMConnection.post body, key
 
-            expect(WebMock).
-              to have_requested(:post, 'https://android.googleapis.com/gcm/send').
-                with(body: body, headers: { 'Content-Type' => 'application/json', 'Authorization' => "key=#{key}" }).
-                  once
-          end
+          expect(WebMock).
+            to have_requested(:post, 'https://android.googleapis.com/gcm/send').
+              with(body: body, headers: { 'Content-Type' => 'application/json', 'Authorization' => "key=#{key}" }).
+                once
         end
 
-        context 'with optional params' do
-          context 'when :gcm_url is present' do
-            it 'posts data to a custom GCM endpoint' do
-              stub_request(:post, 'https://example.com/gcm/send').
-                to_return status: [200, 'OK'], body: response
+        context 'when :gcm_url option is present' do
+          it 'posts data to a custom GCM endpoint' do
+            stub_request(:post, 'https://example.com/gcm/send').
+              to_return status: [200, 'OK'], body: response
 
-              GCMConnection.post body, key, gcm_url: 'https://example.com/gcm/send'
+            GCMConnection.post body, key, gcm_url: 'https://example.com/gcm/send'
 
-              expect(WebMock).
-                to have_requested(:post, 'https://example.com/gcm/send').
-                  with(body: body, headers: { 'Content-Type' => 'application/json', 'Authorization' => "key=#{key}" }).
-                    once
-            end
+            expect(WebMock).
+              to have_requested(:post, 'https://example.com/gcm/send').
+                with(body: body, headers: { 'Content-Type' => 'application/json', 'Authorization' => "key=#{key}" }).
+                  once
           end
         end
 
