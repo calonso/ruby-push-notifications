@@ -12,7 +12,7 @@ module RubyPushNotifications
       # @param key [String]. GCM sender id to use
       #   ((https://developer.android.com/google/gcm/gcm.html#senderid))
       # @param options [Hash] optional. Options for GCMPusher. Currently supports:
-      #   * gcm_url [String]: The URL of the Android GCM endpoint
+      #   * url [String]: URL of the GCM endpoint. Defaults to the official GCM URL.
       #   * open_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
       #   * read_timeout [Integer]: Number of seconds to wait for one block to be read. Defaults to 30.
       def initialize(key, options = {})

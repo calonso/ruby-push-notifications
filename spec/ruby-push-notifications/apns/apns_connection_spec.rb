@@ -29,10 +29,10 @@ module RubyPushNotifications
           expect(APNSConnection.open(cert, true, 'password')).to be_a APNSConnection
         end
 
-        context 'when :apns_host option is present' do
+        context 'when :host option is present' do
           it 'opens a connection with a custom APNS' do
             expect(Socket).to receive(:tcp).with('gateway.push.example.com', 2195, nil, nil, { connect_timeout: 30 }).and_return tcp_socket
-            APNSConnection.open cert, true, 'password', { apns_host: "gateway.push.example.com" }
+            APNSConnection.open cert, true, 'password', { host: "gateway.push.example.com" }
           end
         end
       end

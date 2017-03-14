@@ -23,12 +23,12 @@ module RubyPushNotifications
                 once
         end
 
-        context 'when :gcm_url option is present' do
+        context 'when :url option is present' do
           it 'posts data to a custom GCM endpoint' do
             stub_request(:post, 'https://example.com/gcm/send').
               to_return status: [200, 'OK'], body: response
 
-            GCMConnection.post body, key, gcm_url: 'https://example.com/gcm/send'
+            GCMConnection.post body, key, url: 'https://example.com/gcm/send'
 
             expect(WebMock).
               to have_requested(:post, 'https://example.com/gcm/send').
