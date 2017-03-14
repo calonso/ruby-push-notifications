@@ -40,7 +40,7 @@ module RubyPushNotifications
 
         url = URI.parse options.fetch(:url, GCM_URL)
         http = Net::HTTP.new url.host, url.port
-        http.use_ssl = true
+        http.use_ssl = url.scheme == 'https'
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         http.open_timeout = options.fetch(:open_timeout, 30)
         http.read_timeout = options.fetch(:read_timeout, 30)
