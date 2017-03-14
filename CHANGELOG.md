@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unrealeased] - [unrealease date]
+
+## 1.1.0 - 2017-03-14
 - **Added**: Option (`url`) to set custom GCM endpoint (Android)
 - **Added**: Option (`host`) to set custom APNS environment (iOS)
 
