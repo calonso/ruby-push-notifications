@@ -18,6 +18,7 @@ module RubyPushNotifications
       # @param options [Hash] optional. Options for APNSPusher. Currently supports:
       #   * host [String]: Hostname of the APNS environment. Defaults to the official APNS hostname.
       #   * connect_timeout [Integer]: Number of seconds to wait for the connection to open. Defaults to 30.
+      #   * slice_quantity [Integer]: Number of notifications to send to avoid hard limits. Defaults to 5000.
       def initialize(certificate, sandbox, password = nil, options = {})
         @certificate = certificate
         @pass = password
@@ -37,40 +38,43 @@ module RubyPushNotifications
       def push(notifications)
         conn = APNSConnection.open @certificate, @sandbox, @pass, @options
 
-        binaries = notifications.each_with_object([]) do |notif, binaries|
-          notif.each_message(binaries.count) do |msg|
-            binaries << msg
-          end
-        end
+        notifications.each_slice(@options[:slice_quantity] || 500).with_index do |notifications_slice|
 
-        results = []
-        i = 0
-        while i < binaries.count
-          conn.write binaries[i]
-
-          if i == binaries.count-1
-            conn.flush
-            rs, = IO.select([conn], nil, nil, 2)
-          else
-            rs, = IO.select([conn], [conn])
-          end
-          if rs && rs.any?
-            packed = rs[0].read 6
-            if packed.nil? && i == 0
-              # The connection wasn't properly open
-              # Probably because of wrong certificate/sandbox? combination
-              results << UNKNOWN_ERROR_STATUS_CODE
-            else
-              err = packed.unpack 'ccN'
-              results.slice! err[2]..-1
-              results << err[1]
-              i = err[2]
-              conn = APNSConnection.open @certificate, @sandbox, @pass, @options
+          binaries = notifications_slice.each_with_object([]) do |notif, binaries|
+            notif.each_message(binaries.count) do |msg|
+              binaries << msg
             end
-          else
-            results << NO_ERROR_STATUS_CODE
           end
-          i += 1
+
+          results = []
+          i = 0
+          while i < binaries.count
+            conn.write binaries[i]
+
+            if i == binaries.count-1
+              conn.flush
+              rs, = IO.select([conn], nil, nil, 2)
+            else
+              rs, = IO.select([conn], [conn])
+            end
+            if rs && rs.any?
+              packed = rs[0].read 6
+              if packed.nil? && i == 0
+                # The connection wasn't properly open
+                # Probably because of wrong certificate/sandbox? combination
+                results << UNKNOWN_ERROR_STATUS_CODE
+              else
+                err = packed.unpack 'ccN'
+                results.slice! err[2]..-1
+                results << err[1]
+                i = err[2]
+                conn = APNSConnection.open @certificate, @sandbox, @pass, @options
+              end
+            else
+              results << NO_ERROR_STATUS_CODE
+            end
+            i += 1
+          end
         end
 
         conn.close
