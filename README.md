@@ -38,7 +38,8 @@ For completely detailed examples:
 
 1. [Apple iOS example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/apns.rb)
 2. [Google Android example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/gcm.rb)
-3. [Windows Phone example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/mpns.rb)
+3. [Windows Phone(MPNS) example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/mpns.rb)
+4. [Windows Phone(WNS) example](https://github.com/calonso/ruby-push-notifications/tree/master/examples/wns.rb)
 
 ## Pending tasks
 
