@@ -1,5 +1,6 @@
 require 'uri'
 require 'net/https'
+require 'json'
 
 module RubyPushNotifications
   module WNS
@@ -7,6 +8,7 @@ module RubyPushNotifications
     # Responsible for final connection with the service.
     #
     class WNSConnection
+      class WNSGetTokenError < StandardError; end
 
       # @private Content-Type HTTP Header type string
       CONTENT_TYPE_HEADER  = 'Content-Type'.freeze
@@ -65,6 +67,35 @@ module RubyPushNotifications
           responses << { device_url: url.to_s, headers: extract_headers(response), code: response.code.to_i }
         end
         WNSResponse.new responses
+      end
+
+      # Get access auth token for sending pushes
+      # You can get it on https://account.live.com/developers/applications/index
+      #
+      # @param type [String]. Sid
+      # @param type [String]. Secret
+      #
+      # https://docs.microsoft.com/en-us/windows/uwp/controls-and-patterns/tiles-and-notifications-windows-push-notification-services--wns--overview
+      def self.access_token(sid, secret)
+        body = {
+          grant_type: 'client_credentials',
+          client_id: sid,
+          client_secret: secret,
+          scope: 'notify.windows.com'
+        }
+
+        url = URI.parse "https://login.live.com/accesstoken.srf"
+        http = Net::HTTP.new url.host, url.port
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        response = http.post url.request_uri, URI.encode_www_form(body)
+        response = JSON.parse(response.body)
+
+        if response['error']
+          raise WNSGetTokenError, response['error_description']
+        else
+          response['access_token']
+        end
       end
 
       # Build Header based on type and delay

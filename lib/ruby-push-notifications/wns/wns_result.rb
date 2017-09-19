@@ -15,7 +15,6 @@ module RubyPushNotifications
 
       # @private X-SubscriptionStatus HTTP Header string
       X_STATUS  = 'x-wns-status'
-
     end
 
     # Indicates that the notification was successfully sent to the corresponding
