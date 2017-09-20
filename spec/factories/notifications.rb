@@ -20,4 +20,11 @@ FactoryGirl.define do
     initialize_with { new device_urls, data }
   end
 
+  factory :wns_notification, class: 'RubyPushNotifications::WNS::WNSNotification' do
+    device_urls { [generate(:wns_device_url)] }
+    data message: { value1: 'hello' }
+
+    initialize_with { new device_urls, data }
+  end
+
 end
