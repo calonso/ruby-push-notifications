@@ -49,16 +49,16 @@ module RubyPushNotifications
       # @return [String]. Secret token
       attr_reader :secret
 
+      # @param type [String]. Sid
+      # @param type [String]. Secret
+      #
+      # You can get it on https://account.live.com/developers/applications/index
       def initialize(sid, secret)
         @sid = sid
         @secret = secret
       end
 
       # Get access auth token for sending pushes
-      # You can get it on https://account.live.com/developers/applications/index
-      #
-      # @param type [String]. Sid
-      # @param type [String]. Secret
       #
       # https://docs.microsoft.com/en-us/windows/uwp/controls-and-patterns/tiles-and-notifications-windows-push-notification-services--wns--overview
       def get_token

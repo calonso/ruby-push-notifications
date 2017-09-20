@@ -45,7 +45,7 @@ module RubyPushNotifications
         @data[:type] ||= :raw
       end
 
-      # @return [String]. The GCM's XML format for the payload to send.
+      # @return [String]. The WNS's XML format for the payload to send.
       # (https://docs.microsoft.com/en-us/uwp/schemas/tiles/tiles-xml-schema-portal)
       def as_wns_xml
         xml = Builder::XmlMarkup.new
@@ -56,8 +56,8 @@ module RubyPushNotifications
             xml.tag!('toast', **launch_params(data)) do
               xml.tag!('visual') do
                 xml.tag!('binding', template: data[:template] || 'ToastText02') do
-                  xml.tag!('text', id: 1) { xml.text!(data[:title]) }
-                  xml.tag!('text', id: 2) { xml.text!(data[:message]) }
+                  xml.tag!('text', id: 1) { xml.text!(data[:title].to_s) }
+                  xml.tag!('text', id: 2) { xml.text!(data[:message].to_s) }
                 end
               end
             end
@@ -65,8 +65,8 @@ module RubyPushNotifications
             xml.tag!('tile') do
               xml.tag!('visual') do
                 xml.tag!('binding', template: data[:template] || 'TileWideImageAndText01') do
-                  xml.tag!('image', src: data[:image])
-                  xml.tag!('text') { xml.text!(data[:message]) }
+                  xml.tag!('image', src: data[:image].to_s)
+                  xml.tag!('text') { xml.text!(data[:message].to_s) }
                 end
               end
             end
@@ -86,6 +86,7 @@ module RubyPushNotifications
       end
 
       def build_hash(xml, options)
+        return unless options
         options.each do |k, v|
           xml.tag!(k.to_s) { v.is_a?(Hash) ? build_hash(xml, v) : xml.text!(v.to_s) }
         end
