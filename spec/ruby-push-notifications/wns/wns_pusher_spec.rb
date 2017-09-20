@@ -32,7 +32,7 @@ module RubyPushNotifications
 
         it 'submits every notification' do
           pusher.push [raw_notification, toast_notification, tile_notification, badge_notification]
-          wns_connection::WP_TARGETS.keys.each do |push_type|
+          %i(raw toast tile badge).each do |push_type|
             headers = {
               wns_connection::CONTENT_TYPE_HEADER => wns_connection::CONTENT_TYPE[push_type],
               wns_connection::X_WNS_TYPE_HEADER => wns_connection::WP_TARGETS[push_type],

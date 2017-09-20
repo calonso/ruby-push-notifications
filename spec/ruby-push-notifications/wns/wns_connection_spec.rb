@@ -48,34 +48,6 @@ module RubyPushNotifications
           expect(WNSConnection.post toast_notification, access_token).to eq WNSResponse.new(responses)
         end
       end
-
-      describe '::access_token' do
-        let(:sid) { 'sid' }
-        let(:secret) { 'secret' }
-        let(:body) {
-          "{\"token_type\":\"bearer\",\"access_token\":\"real_access_token\",\"expires_in\":86400}"
-        }
-
-        before do
-          stub_request(:post, "https://login.live.com/accesstoken.srf").
-            to_return status: [200, 'OK'], body: body
-        end
-
-        it 'returns access token' do
-          expect(WNSConnection.access_token(sid, secret)).to eq('real_access_token')
-        end
-
-        context 'when service return an error' do
-          let(:body) {
-            "{\"error\":\"error\",\"error_description\":\"error_description\"}"
-          }
-
-          it 'raise an error' do
-            expect { WNSConnection.access_token(sid, secret) }.to \
-              raise_error(RubyPushNotifications::WNS::WNSConnection::WNSGetTokenError)
-          end
-        end
-      end
     end
   end
 end

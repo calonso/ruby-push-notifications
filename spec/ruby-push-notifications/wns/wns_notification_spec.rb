@@ -3,7 +3,7 @@ module RubyPushNotifications
     describe WNSNotification do
 
       let(:device_urls) { %w(a b c) }
-      let(:raw_notification) { build :wns_notification }
+      let(:raw_notification) { build :wns_notification, data: { message: { title: 'Title', message: 'Hello WNS World!'} } }
       let(:toast_data) { { title: 'Title', message: 'Hello WNS World!', type: :toast } }
       let(:toast_notification) { build :wns_notification, device_urls: device_urls, data: toast_data }
       let(:tile_data) { { message: 'Hello WNS World!', image: 'http://image.com/image.jpg', type: :tile } }
@@ -12,8 +12,9 @@ module RubyPushNotifications
       let(:badge_notification) { build :wns_notification, device_urls: device_urls, data: badge_data }
 
       it 'builds the right wns raw xml' do
+        puts raw_notification.as_wns_xml
         xml = '<?xml version="1.0" encoding="UTF-8"?>'
-        xml << '<root><value1>hello</value1></root>'
+        xml << '<root><title>Title</title><message>Hello WNS World!</message></root>'
         expect(raw_notification.as_wns_xml).to eq xml
       end
 
@@ -23,17 +24,36 @@ module RubyPushNotifications
         expect(badge_notification.as_wns_xml).to eq xml
       end
 
-      it 'builds the right wns toast xml' do
-        xml = '<?xml version="1.0" encoding="UTF-8"?>'
-        xml << '<toast>'
-        xml << '<visual>'
-        xml << '<binding template="ToastText02">'
-        xml << '<text id="1">Title</text>'
-        xml << '<text id="2">Hello WNS World!</text>'
-        xml << '</binding>'
-        xml << '</visual>'
-        xml << '</toast>'
-        expect(toast_notification.as_wns_xml).to eq xml
+      describe 'toast xml' do
+        it 'builds the right wns toast xml' do
+          xml = '<?xml version="1.0" encoding="UTF-8"?>'
+          xml << '<toast>'
+          xml << '<visual>'
+          xml << '<binding template="ToastText02">'
+          xml << '<text id="1">Title</text>'
+          xml << '<text id="2">Hello WNS World!</text>'
+          xml << '</binding>'
+          xml << '</visual>'
+          xml << '</toast>'
+          expect(toast_notification.as_wns_xml).to eq xml
+        end
+
+        context 'when params present' do
+          let(:toast_data) { super().merge(param: { var1: 'value1', var2: 'value2'}) }
+
+          it 'builds the right wns toast xml' do
+            xml = '<?xml version="1.0" encoding="UTF-8"?>'
+            xml << '<toast launch="{&quot;var1&quot;:&quot;value1&quot;,&quot;var2&quot;:&quot;value2&quot;}">'
+            xml << '<visual>'
+            xml << '<binding template="ToastText02">'
+            xml << '<text id="1">Title</text>'
+            xml << '<text id="2">Hello WNS World!</text>'
+            xml << '</binding>'
+            xml << '</visual>'
+            xml << '</toast>'
+            expect(toast_notification.as_wns_xml).to eq xml
+          end
+        end
       end
 
       it 'builds the right wns tile xml' do
