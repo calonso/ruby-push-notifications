@@ -10,6 +10,7 @@ module RubyPushNotifications
     class FCMConnection
 
       # @private The URL of the Android FCM endpoint
+      # Credits: https://github.com/calos0921 - for this url change to FCM std
       FCM_URL = 'https://fcm.googleapis.com/fcm/send'
 
       # @private Content-Type HTTP Header string

@@ -20,6 +20,7 @@ module RubyPushNotifications
 
       # @return [String]. The FCM's JSON format for the payload to send.
       #    (https://developer.android.com/google/fcm/server-ref.html#send-downstream)
+      # Credits: https://github.com/calos0921 - for this url change to FCM std
       def as_fcm_json
         JSON.dump(
           @json_data
