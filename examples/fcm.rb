@@ -1,4 +1,4 @@
-#!/usr/bin/env bundle exec ruby
+# frozen_string_literal: true
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
@@ -12,26 +12,26 @@ registration_ids = [
 # Example JSON payload
 payload = {
   "notification": {
-    "title": "Greetings Test",
-    "body": "Remember to test! ALOT!",
+    "title": 'Greetings Test',
+    "body": 'Remember to test! ALOT!',
     "forceStart": 1,
-    "sound": "default",
-    "vibrate": "true",
-    "icon": "fcm_push_icon"
+    "sound": 'default',
+    "vibrate": 'true',
+    "icon": 'fcm_push_icon'
   },
   "android": {
-    "priority": "high",
-    "vibrate": "true"
+    "priority": 'high',
+    "vibrate": 'true'
   },
   "data": {
-    "url": "https://www.google.com"
+    "url": 'https://www.google.com'
   },
   "webpush": {
     "headers": {
-      "TTL": "60"
+      "TTL": '60'
     }
   },
-  "priority": "high"
+  "priority": 'high'
 }
 
 notification = RubyPushNotifications::FCM::FCMNotification.new registration_ids, payload

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'right results' do |success, failed, individual_results|
   it 'has the expected success value' do
     expect(notification.success).to eq success

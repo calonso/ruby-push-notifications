@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ruby-push-notifications/fcm/fcm_connection'
 require 'ruby-push-notifications/fcm/fcm_notification'
 require 'ruby-push-notifications/fcm/fcm_pusher'

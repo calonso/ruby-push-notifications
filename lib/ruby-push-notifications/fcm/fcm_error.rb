@@ -1,17 +1,18 @@
+# frozen_string_literal: true
 
 module RubyPushNotifications
   module FCM
     # Base class for all FCM related errors
     #
     # @author Carlos Alonso
-    class FCMError < StandardError ; end
+    class FCMError < StandardError; end
 
-    class MalformedFCMJSONError < FCMError ; end
+    class MalformedFCMJSONError < FCMError; end
 
-    class FCMAuthError < FCMError ; end
+    class FCMAuthError < FCMError; end
 
-    class FCMInternalError < FCMError ; end
+    class FCMInternalError < FCMError; end
 
-    class UnexpectedFCMResponseError < FCMError ; end
+    class UnexpectedFCMResponseError < FCMError; end
   end
 end

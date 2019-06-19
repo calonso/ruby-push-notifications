@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module RubyPushNotifications
   module FCM
@@ -5,7 +6,7 @@ module RubyPushNotifications
     # Registration ID
     # (https://developer.android.com/google/fcm/server-ref.html#table4)
     # @author Carlos Alonso
-    class FCMResult ; end
+    class FCMResult; end
 
     # Indicates that the notification was successfully sent to the corresponding
     # registration ID
@@ -30,7 +31,7 @@ module RubyPushNotifications
 
       def ==(other)
         (other.is_a?(FCMCanonicalIDResult) && @canonical_id == other.canonical_id) ||
-        super(other)
+          super(other)
       end
     end
 

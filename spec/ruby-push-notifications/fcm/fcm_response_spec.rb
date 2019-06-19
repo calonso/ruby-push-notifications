@@ -3,27 +3,27 @@
 module RubyPushNotifications
   module FCM
     describe FCMResponse do
-
       describe 'success' do
-
         let(:successful_messages) { 3 }
         let(:failed_messages) { 1 }
         let(:canonical_ids) { 2 }
-        let(:body) { JSON.dump(
-          multicast_id: 123456789,
-          success: successful_messages,
-          failure: failed_messages,
-          canonical_ids: canonical_ids,
-          results: [
-            { message_id: 1,
-              registration_id: 'new_reg_id' },
-            { message_id: 2,
-              registration_id: 'new_reg_id_2' },
-            { message_id: 3 },
-            { message_id: 4,
-              error: 'NotRegistered' }
-          ]
-        ) }
+        let(:body) {
+          JSON.dump(
+            multicast_id: 123456789,
+            success: successful_messages,
+            failure: failed_messages,
+            canonical_ids: canonical_ids,
+            results: [
+              { message_id: 1,
+                registration_id: 'new_reg_id' },
+              { message_id: 2,
+                registration_id: 'new_reg_id_2' },
+              { message_id: 3 },
+              { message_id: 4,
+                error: 'NotRegistered' }
+            ]
+          )
+        }
 
         let(:response) { FCMResponse.new 200, body }
 
@@ -40,7 +40,12 @@ module RubyPushNotifications
         end
 
         it 'parses the results' do
-          expect(response.results).to eq [FCMCanonicalIDResult.new('new_reg_id'), FCMCanonicalIDResult.new('new_reg_id_2'), FCMResultOK.new, FCMResultError.new('NotRegistered')]
+          expect(
+            response.results
+          ).to eq [FCMCanonicalIDResult.new('new_reg_id'),
+                   FCMCanonicalIDResult.new('new_reg_id_2'),
+                   FCMResultOK.new,
+                   FCMResultError.new('NotRegistered')]
         end
       end
 

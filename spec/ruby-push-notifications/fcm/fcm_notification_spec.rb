@@ -3,7 +3,6 @@
 module RubyPushNotifications
   module FCM
     describe FCMNotification do
-
       let(:registration_ids) { %w[a] }
       let(:data) {
         {
@@ -39,7 +38,11 @@ module RubyPushNotifications
       }
 
       it 'builds the right fcm json' do
-        expect(notification.as_fcm_json).to eq JSON.dump({registration_ids: @registration_ids}.merge(data))
+        expect(notification.as_fcm_json).to eq JSON.dump(
+          {
+            registration_ids: @registration_ids
+          }.merge(data)
+        )
       end
 
       it 'validates the registration_ids format'
@@ -48,15 +51,17 @@ module RubyPushNotifications
       it 'validates the data'
 
       it_behaves_like 'a proper results manager' do
-        let(:success_count) {2}
-        let(:failures_count) {1}
-        let(:canonical_id) {'abcd'}
-        let(:individual_results) {[FCMCanonicalIDResult.new(canonical_id)]}
+        let(:success_count) { 2 }
+        let(:failures_count) { 1 }
+        let(:canonical_id) { 'abcd' }
+        let(:individual_results) { [FCMCanonicalIDResult.new(canonical_id)] }
         let(:results) do
           FCMResponse.new 200, JSON.dump(
-            success: success_count, failure: failures_count, results: [
-            registration_id: canonical_id
-          ]
+            success: success_count,
+            failure: failures_count,
+            results: [
+              registration_id: canonical_id
+            ]
           )
         end
       end

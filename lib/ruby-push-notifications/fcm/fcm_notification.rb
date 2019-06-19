@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module RubyPushNotifications
   module FCM
@@ -15,7 +16,7 @@ module RubyPushNotifications
       # @param [Hash]. Payload to send.
       def initialize(registration_ids, data)
         @registration_ids = registration_ids
-        @json_data = {registration_ids: @registration_ids}.merge(data)
+        @json_data = { registration_ids: @registration_ids }.merge(data)
       end
 
       # @return [String]. The FCM's JSON format for the payload to send.

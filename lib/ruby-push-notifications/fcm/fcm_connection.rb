@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'uri'
 require 'net/https'
 
@@ -14,10 +16,10 @@ module RubyPushNotifications
       FCM_URL = 'https://fcm.googleapis.com/fcm/send'
 
       # @private Content-Type HTTP Header string
-      CONTENT_TYPE_HEADER  = 'Content-Type'
+      CONTENT_TYPE_HEADER = 'Content-Type'
 
       # @private Application/JSON content type
-      JSON_CONTENT_TYPE    = 'application/json'
+      JSON_CONTENT_TYPE = 'application/json'
 
       # @private Authorization HTTP Header String
       AUTHORIZATION_HEADER = 'Authorization'
@@ -35,8 +37,8 @@ module RubyPushNotifications
       # @return [FCMResponse]. The FCMResponse that encapsulates the received response
       def self.post(notification, key, options = {})
         headers = {
-            CONTENT_TYPE_HEADER => JSON_CONTENT_TYPE,
-            AUTHORIZATION_HEADER => "key=#{key}"
+          CONTENT_TYPE_HEADER => JSON_CONTENT_TYPE,
+          AUTHORIZATION_HEADER => "key=#{key}"
         }
 
         url = URI.parse options.fetch(:url, FCM_URL)
