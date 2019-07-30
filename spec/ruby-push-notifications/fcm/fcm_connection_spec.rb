@@ -30,8 +30,8 @@ module RubyPushNotifications
         context 'when :url option is present' do
           it 'posts data to a custom FCM endpoint' do
             test_url = 'https://example.com/fcm/send'
-            stub_request(:post, test_url).
-              to_return status: [200, 'OK'], body: response
+            stub_request(:post, test_url).to_return status: [200, 'OK'],
+                                                    body: response
 
             FCMConnection.post body, key, url: test_url
             url = 'https://example.com/fcm/send'
