@@ -38,16 +38,15 @@ module RubyPushNotifications
       }
 
       it 'builds the right fcm json' do
-        expect(notification.as_fcm_json).to eq JSON.dump(
-          {
-            registration_ids: @registration_ids
-          }.merge(data)
-        )
+        expect(notification.as_fcm_json).to include(JSON.dump(
+          { registration_ids: registration_ids }.merge(data))
+                                            )
       end
 
       it 'validates the registration_ids format'
 
-      # According to https://developer.android.com/google/fcm/server-ref.html#table1
+      # According to
+      # https://developer.android.com/google/fcm/server-ref.html#table1
       it 'validates the data'
 
       it_behaves_like 'a proper results manager' do
