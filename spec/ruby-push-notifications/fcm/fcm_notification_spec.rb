@@ -38,9 +38,15 @@ module RubyPushNotifications
       }
 
       it 'builds the right fcm json' do
-        expect(notification.as_fcm_json).to include(JSON.dump(
-          { registration_ids: registration_ids }.merge(data))
-                                            )
+        expect(
+          notification.as_fcm_json
+        ).to include(
+               JSON.dump(
+                 {
+                   registration_ids: registration_ids
+                 }.merge(data)
+               )
+             )
       end
 
       it 'validates the registration_ids format'
