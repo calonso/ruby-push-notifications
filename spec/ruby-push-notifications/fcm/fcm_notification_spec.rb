@@ -4,7 +4,7 @@ module RubyPushNotifications
   module FCM
     describe FCMNotification do
       let(:registration_ids) { %w[a] }
-      let(:data) {
+      let(:data) do
         {
           a: {
             'notification': {
@@ -30,23 +30,17 @@ module RubyPushNotifications
             'priority': 'high'
           }
         }
-      }
-      let(:notification) {
+      end
+
+      let(:notification) do
         build :fcm_notification,
               registration_ids: registration_ids,
               data: data
-      }
+      end
 
       it 'builds the right fcm json' do
-        expect(
-          notification.as_fcm_json
-        ).to include(
-               JSON.dump(
-                 {
-                   registration_ids: registration_ids
-                 }.merge(data)
-               )
-             )
+        test_case = { registration_ids: registration_ids }.merge(data)
+        expect(notification.as_fcm_json).to include(JSON.dump(test_case))
       end
 
       it 'validates the registration_ids format'
