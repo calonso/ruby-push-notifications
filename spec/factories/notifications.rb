@@ -22,27 +22,27 @@ FactoryGirl.define do
     registration_ids { [generate(:fcm_registration_id)] }
     data a:
            {
-             'notification': {
-               'title': 'Greetings Test',
-               'body': 'Remember to test! ALOT!',
-               'forceStart': 1,
-               'sound': 'default',
-               'vibrate': 'true',
-               'icon': 'fcm_push_icon'
+             notification: {
+               title: 'Greetings Test',
+               body: 'Remember to test! ALOT!',
+               forceStart: 1,
+               sound: 'default',
+               vibrate: 'true',
+               icon: 'fcm_push_icon'
              },
-             'android': {
-               'priority': 'high',
-               'vibrate': 'true'
+             android: {
+               priority: 'high',
+               vibrate: 'true'
              },
-             'data': {
-               'url': 'https://www.google.com'
+             data: {
+               url: 'https://www.google.com'
              },
-             'webpush': {
-               'headers': {
-                 'TTL': '60'
+             webpush: {
+               headers: {
+                 TTL: '60'
                }
              },
-             'priority': 'high'
+             priority: 'high'
            }
 
     initialize_with { new registration_ids, data }
