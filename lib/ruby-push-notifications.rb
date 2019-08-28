@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RubyPushNotifications; end
+
 require 'forwardable'
 require 'ruby-push-notifications/notification_results_manager'
 require 'ruby-push-notifications/apns'

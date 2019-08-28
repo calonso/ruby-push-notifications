@@ -1,3 +1,5 @@
+module RubyPushNotifications::WNS; end
+
 require 'ruby-push-notifications/wns/wns_access'
 require 'ruby-push-notifications/wns/wns_connection'
 require 'ruby-push-notifications/wns/wns_notification'
