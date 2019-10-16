@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unrealeased] - [unrealease date]
 
+## 1.3.0 - 2019-08-28
+- **Added**: Add support FCM
+
 ## 1.2.0 - 2017-09-20
 - **Added**: Add support Windows Push Notification Services (WNS)
 
